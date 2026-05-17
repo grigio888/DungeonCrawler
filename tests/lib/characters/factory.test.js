@@ -9,7 +9,8 @@ import {
 	getTotalStatPoints
 } from '$lib/progression';
 import CLASSES from '$lib/classes';
-import { createCharacterSpec } from '$lib/characters/factory';
+import { GENDER } from '$lib/characters';
+import { createBaseCharacter, createCharacterSpec, isValidGender } from '$lib/characters/factory';
 import BaseCharacter from '$lib/characters/controller';
 
 /**
@@ -39,6 +40,25 @@ function expectedMaxSp(classDef, level, scales) {
 }
 
 describe('characters/factory', () => {
+	it('createBaseCharacter includes gender', () => {
+		const base = createBaseCharacter({ gender: GENDER.MALE, name: 'Hero' });
+
+		expect(base.gender).toBe(GENDER.MALE);
+		expect(base.name).toBe('Hero');
+		expect(base.scales.strength).toBe(BASE_CHARACTER_STAT_VALUE);
+	});
+
+	it('defaults base character gender to female', () => {
+		expect(createBaseCharacter().gender).toBe(GENDER.FEMALE);
+	});
+
+	it('rejects invalid gender via resolveGender fallback', () => {
+		expect(isValidGender('other')).toBe(false);
+		expect(createBaseCharacter({ gender: /** @type {any} */ ('other') }).gender).toBe(
+			GENDER.FEMALE
+		);
+	});
+
 	it('starts with base 5 in every stat at level 1', () => {
 		const spec = createCharacterSpec({ classId: 'peasant', level: 1 });
 
@@ -63,6 +83,17 @@ describe('characters/factory', () => {
 		expect(allocatedTotal).toBe(getExpectedCharacterStatTotal(4));
 		expect(spec.maxHp).toBe(expectedMaxHp(classDef, 4, spec.scales));
 		expect(spec.maxSp).toBe(expectedMaxSp(classDef, 4, spec.scales));
+	});
+
+	it('preserves gender through class change and level up', () => {
+		const character = new BaseCharacter({ classId: 'peasant', level: 4, gender: GENDER.MALE });
+		expect(character.gender).toBe(GENDER.MALE);
+
+		character.patch({ classId: 'mage' });
+		expect(character.gender).toBe(GENDER.MALE);
+
+		character.patch({ level: 5 });
+		expect(character.gender).toBe(GENDER.MALE);
 	});
 
 	it('preserves stats on class change and applies new weights on level up', () => {

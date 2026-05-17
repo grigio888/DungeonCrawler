@@ -37,11 +37,7 @@ describe('progression/buildStats', () => {
 
 		expect(level1.maxHp).toBe(20 + (level1.scales[SCALES.VITALITY] ?? 0) * 5);
 		expect(level1.maxSp).toBe(8 + (level1.scales[SCALES.INTELLIGENCE] ?? 0) * 3);
-		expect(level5.maxHp).toBe(
-			20 + levelBonusHp + (level5.scales[SCALES.VITALITY] ?? 0) * 5
-		);
-		expect(level5.maxSp).toBe(
-			8 + levelBonusSp + (level5.scales[SCALES.INTELLIGENCE] ?? 0) * 3
-		);
+		expect(level5.maxHp).toBe(20 + levelBonusHp + (level5.scales[SCALES.VITALITY] ?? 0) * 5);
+		expect(level5.maxSp).toBe(8 + levelBonusSp + (level5.scales[SCALES.INTELLIGENCE] ?? 0) * 3);
 	});
 });

@@ -73,7 +73,6 @@ export function expectClassDefinition(definition, label = 'class', registry = {}
 		).toBeLessThan(tier);
 	}
 
-
 	if (tier === 0) {
 		expect(jobRequirements, `${label}.jobRequirements (tier 0)`).toEqual([]);
 	} else if (tier >= 1) {

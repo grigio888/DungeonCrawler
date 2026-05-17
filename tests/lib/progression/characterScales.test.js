@@ -45,12 +45,7 @@ describe('progression/characterScales', () => {
 			previousLevel: 4
 		});
 
-		const manualGain = applyLevelStatGains(
-			{ ...atLevel4 },
-			5,
-			5,
-			CLASSES.peasant.statWeights
-		);
+		const manualGain = applyLevelStatGains({ ...atLevel4 }, 5, 5, CLASSES.peasant.statWeights);
 
 		expect(atLevel5).toEqual(manualGain);
 		expect(getPointsPerLevel(5)).toBe(4);
@@ -81,8 +76,6 @@ describe('progression/characterScales', () => {
 		const freshMage = buildCharacterScales(level, CLASSES.mage.statWeights);
 
 		expect(switchedAndLeveled).not.toEqual(freshMage);
-		expect(switchedAndLeveled[SCALES.INTELLIGENCE]).toBeGreaterThan(
-			asPeasant[SCALES.INTELLIGENCE]
-		);
+		expect(switchedAndLeveled[SCALES.INTELLIGENCE]).toBeGreaterThan(asPeasant[SCALES.INTELLIGENCE]);
 	});
 });

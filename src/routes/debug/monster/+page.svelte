@@ -66,7 +66,7 @@
 <main class="min-h-screen bg-zinc-950 text-zinc-100">
 	<div class="mx-auto max-w-6xl px-4 py-8">
 		<header class="mb-8 border-b border-zinc-800 pb-6">
-			<p class="text-sm font-medium uppercase tracking-wide text-amber-400/90">Debug</p>
+			<p class="text-sm font-medium tracking-wide text-amber-400/90 uppercase">Debug</p>
 			<h1 class="mt-1 text-3xl font-semibold tracking-tight">Monster inspector</h1>
 			<p class="mt-2 text-zinc-400">
 				Pick a template and level to preview the resolved runtime spec.
@@ -80,9 +80,7 @@
 				<section
 					class="rounded-xl border border-amber-500/20 bg-zinc-900/80 p-4 shadow-lg shadow-black/20"
 				>
-					<h2 class="text-sm font-medium uppercase tracking-wide text-amber-400/90">
-						Configure
-					</h2>
+					<h2 class="text-sm font-medium tracking-wide text-amber-400/90 uppercase">Configure</h2>
 
 					<div class="mt-4 space-y-4">
 						<label class="block">
@@ -91,7 +89,7 @@
 								bind:value={monsterId}
 								class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100"
 							>
-								{#each monsterIds as id}
+								{#each monsterIds as id (id)}
 									<option value={id}>{MONSTERS[id].name} ({id})</option>
 								{/each}
 							</select>
@@ -125,14 +123,12 @@
 					</dl>
 				</section>
 				{#if spriteUrl}
-					<div
-						class="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/80 p-4"
-					>
-						<p class="mb-3 text-xs uppercase tracking-wide text-zinc-500">Sprite</p>
+					<div class="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/80 p-4">
+						<p class="mb-3 text-xs tracking-wide text-zinc-500 uppercase">Sprite</p>
 						<img
 							src={spriteUrl}
 							alt="{monster.name} sprite"
-							class="mx-auto max-h-48 w-auto image-pixelated"
+							class="image-pixelated mx-auto max-h-48 w-auto"
 						/>
 					</div>
 				{:else}
@@ -143,7 +139,6 @@
 						<code class="text-xs">monsters/{monsterId}/sprites/</code>
 					</div>
 				{/if}
-
 			</aside>
 
 			<div class="min-w-0 space-y-6">
@@ -151,39 +146,39 @@
 					<h2 class="text-lg font-medium text-amber-300/90">Identity</h2>
 					<dl class="mt-4 grid gap-3 sm:grid-cols-2">
 						<div>
-							<dt class="text-xs uppercase text-zinc-500">Name</dt>
+							<dt class="text-xs text-zinc-500 uppercase">Name</dt>
 							<dd class="mt-0.5 font-medium">{monster.name}</dd>
 						</div>
 						<div>
-							<dt class="text-xs uppercase text-zinc-500">Template ID</dt>
+							<dt class="text-xs text-zinc-500 uppercase">Template ID</dt>
 							<dd class="mt-0.5 font-mono text-sm">{monster.monsterId}</dd>
 						</div>
 						<div>
-							<dt class="text-xs uppercase text-zinc-500">Instance ID</dt>
+							<dt class="text-xs text-zinc-500 uppercase">Instance ID</dt>
 							<dd class="mt-0.5 font-mono text-sm break-all">{monster.id}</dd>
 						</div>
 						<div>
-							<dt class="text-xs uppercase text-zinc-500">Kind</dt>
+							<dt class="text-xs text-zinc-500 uppercase">Kind</dt>
 							<dd class="mt-0.5">{monster.kind}</dd>
 						</div>
 						<div>
-							<dt class="text-xs uppercase text-zinc-500">Level</dt>
+							<dt class="text-xs text-zinc-500 uppercase">Level</dt>
 							<dd class="mt-0.5">{monster.level}</dd>
 						</div>
 						<div>
-							<dt class="text-xs uppercase text-zinc-500">Display</dt>
+							<dt class="text-xs text-zinc-500 uppercase">Display</dt>
 							<dd class="mt-0.5">{monster.displayLabel}</dd>
 						</div>
 						<div class="sm:col-span-2">
-							<dt class="text-xs uppercase text-zinc-500">Description</dt>
+							<dt class="text-xs text-zinc-500 uppercase">Description</dt>
 							<dd class="mt-0.5 text-zinc-300">{spec.description}</dd>
 						</div>
 						<div>
-							<dt class="text-xs uppercase text-zinc-500">Prompt path</dt>
+							<dt class="text-xs text-zinc-500 uppercase">Prompt path</dt>
 							<dd class="mt-0.5 font-mono text-sm">{monster.promptPath}</dd>
 						</div>
 						<div>
-							<dt class="text-xs uppercase text-zinc-500">Alive</dt>
+							<dt class="text-xs text-zinc-500 uppercase">Alive</dt>
 							<dd class="mt-0.5">{monster.isAlive ? 'yes' : 'no'}</dd>
 						</div>
 					</dl>
@@ -193,15 +188,15 @@
 					<h2 class="text-lg font-medium text-amber-300/90">Vitals</h2>
 					<dl class="mt-4 grid gap-3 sm:grid-cols-2">
 						<div>
-							<dt class="text-xs uppercase text-zinc-500">HP</dt>
+							<dt class="text-xs text-zinc-500 uppercase">HP</dt>
 							<dd class="mt-0.5 font-mono">{monster.hp} / {monster.maxHp}</dd>
 						</div>
 						<div>
-							<dt class="text-xs uppercase text-zinc-500">MP</dt>
+							<dt class="text-xs text-zinc-500 uppercase">MP</dt>
 							<dd class="mt-0.5 font-mono">{monster.sp} / {monster.maxSp}</dd>
 						</div>
 						<div>
-							<dt class="text-xs uppercase text-zinc-500">Base vitals</dt>
+							<dt class="text-xs text-zinc-500 uppercase">Base vitals</dt>
 							<dd class="mt-0.5 font-mono text-sm">
 								HP {spec.baseVitals?.hp ?? 0}, MP {spec.baseVitals?.mp ?? 0}
 							</dd>
@@ -215,13 +210,13 @@
 						<table class="w-full text-left text-sm">
 							<thead class="border-b border-zinc-700 text-zinc-500">
 								<tr>
-									<th class="pb-2 pr-4 font-medium">Stat</th>
-									<th class="pb-2 pr-4 font-medium">Value</th>
+									<th class="pr-4 pb-2 font-medium">Stat</th>
+									<th class="pr-4 pb-2 font-medium">Value</th>
 									<th class="pb-2 font-medium">Weight</th>
 								</tr>
 							</thead>
 							<tbody class="divide-y divide-zinc-800">
-								{#each scaleKeys as key}
+								{#each scaleKeys as key (key)}
 									<tr>
 										<td class="py-2 pr-4 font-mono text-zinc-300">{key}</td>
 										<td class="py-2 pr-4 font-mono">{spec.scales[key] ?? 0}</td>
@@ -241,7 +236,7 @@
 					<h2 class="text-lg font-medium text-amber-300/90">Skills</h2>
 					{#if spec.skills?.length}
 						<ul class="mt-4 space-y-2 text-sm text-zinc-300">
-							{#each spec.skills as skill}
+							{#each spec.skills as skill (skill)}
 								<li class="rounded-lg bg-zinc-950/80 px-3 py-2">{describeSkill(skill)}</li>
 							{/each}
 						</ul>

@@ -28,12 +28,7 @@ export function pickAllocatableWeights(statWeights) {
  * @param {{ hp?: number, mp?: number }} [baseVitals]
  * @param {import('./vitals.js').VitalProgression | null} [vitalProgression]
  */
-export function buildStatsForLevel(
-	level,
-	statWeights,
-	baseVitals = {},
-	vitalProgression = null
-) {
+export function buildStatsForLevel(level, statWeights, baseVitals = {}, vitalProgression = null) {
 	const pool = getTotalStatPoints(level);
 	const allocated = distributeStatPoints(pool, pickAllocatableWeights(statWeights));
 

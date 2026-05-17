@@ -9,12 +9,9 @@ describe('classes/index', () => {
 		expect(Object.keys(CLASSES).length).toBeGreaterThan(0);
 	});
 
-	it.each(Object.entries(CLASSES))(
-		'[%s] registry key matches definition id',
-		(key, definition) => {
-			expect(key).toBe(definition.id);
-		}
-	);
+	it.each(Object.entries(CLASSES))('[%s] registry key matches definition id', (key, definition) => {
+		expect(key).toBe(definition.id);
+	});
 
 	it.each(Object.values(CLASSES))('$id matches the expected class structure', (definition) => {
 		expectClassDefinition(definition, definition.id, CLASSES);

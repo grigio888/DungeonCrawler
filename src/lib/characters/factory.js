@@ -1,9 +1,64 @@
 import { computeVitals } from '$lib/progression';
-import { resolveCharacterScales } from '$lib/progression/characterScales.js';
+import {
+	createBaseCharacterScales,
+	resolveCharacterScales
+} from '$lib/progression/characterScales.js';
 import { getClassDefinition } from '$lib/classes';
 
-/** @typedef {'male' | 'female'} Gender */
+import { GENDER, GENDER_VALUES } from './enums.js';
+
+/** @typedef {import('./enums.js').Gender} Gender */
 /** @typedef {'player' | 'npc' | 'enemy'} CharacterKind */
+
+/**
+ * @typedef {Object} BaseCharacterInput
+ * @property {Gender} [gender]
+ * @property {string} [name]
+ * @property {CharacterKind} [kind]
+ * @property {number} [level]
+ * @property {Record<string, number>} [scales]
+ */
+
+/**
+ * @typedef {Object} BaseCharacter
+ * @property {string} name
+ * @property {Gender} gender
+ * @property {CharacterKind} kind
+ * @property {number} level
+ * @property {Record<string, number>} scales
+ */
+
+/**
+ * @param {unknown} gender
+ * @returns {gender is Gender}
+ */
+export function isValidGender(gender) {
+	return typeof gender === 'string' && GENDER_VALUES.includes(/** @type {Gender} */ (gender));
+}
+
+/**
+ * @param {unknown} gender
+ * @returns {Gender}
+ */
+export function resolveGender(gender) {
+	if (isValidGender(gender)) return gender;
+	return GENDER.FEMALE;
+}
+
+/**
+ * Base identity + stat floor (5 in each allocatable stat). Class is applied later via `createCharacterSpec`.
+ * @param {BaseCharacterInput} [overrides]
+ * @returns {BaseCharacter}
+ */
+export function createBaseCharacter(overrides = {}) {
+	return {
+		name: overrides.name ?? 'Adventurer',
+		gender: resolveGender(overrides.gender),
+		kind: overrides.kind ?? 'player',
+		level: overrides.level ?? 1,
+		scales: overrides.scales ?? createBaseCharacterScales()
+	};
+}
 
 /**
  * @param {string} classId
@@ -35,10 +90,21 @@ export function buildCharacterStats(classId, level, subclassId = null, options =
  * @returns {CharacterSpec & Record<string, unknown>}
  */
 export function createCharacterSpec(overrides = {}) {
+	const base = createBaseCharacter({
+		gender: overrides.gender,
+		name: overrides.name,
+		kind: overrides.kind,
+		level: overrides.level,
+		scales:
+			overrides.scales != null
+				? /** @type {Record<string, number>} */ (overrides.scales)
+				: undefined
+	});
+
 	const classId = overrides.classId ?? 'peasant';
 	const subclassId = overrides.subclassId ?? null;
 	const classDef = getClassDefinition(classId);
-	const level = overrides.level ?? classDef.level ?? 1;
+	const level = overrides.level ?? classDef.level ?? base.level;
 	const previousLevel =
 		typeof overrides.previousLevel === 'number' ? overrides.previousLevel : undefined;
 
@@ -46,9 +112,11 @@ export function createCharacterSpec(overrides = {}) {
 		level,
 		statWeights: classDef.statWeights,
 		existingScales:
-			overrides.scales != null
-				? /** @type {Record<string, number>} */ (overrides.scales)
-				: undefined,
+			previousLevel != null
+				? base.scales
+				: overrides.scales != null
+					? /** @type {Record<string, number>} */ (overrides.scales)
+					: undefined,
 		previousLevel
 	});
 
@@ -59,9 +127,9 @@ export function createCharacterSpec(overrides = {}) {
 
 	return {
 		id: overrides.id ?? createId(),
-		kind: overrides.kind ?? 'player',
-		name: overrides.name ?? 'Adventurer',
-		gender: overrides.gender ?? 'female',
+		kind: base.kind,
+		name: base.name,
+		gender: base.gender,
 		classId,
 		subclassId,
 		level,

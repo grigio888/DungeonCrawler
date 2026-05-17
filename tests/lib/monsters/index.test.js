@@ -16,10 +16,7 @@ describe('monsters/index', () => {
 		}
 	);
 
-	it.each(Object.values(MONSTERS))(
-		'$id matches the expected monster structure',
-		(definition) => {
-			expectMonsterDefinition(definition, definition.id);
-		}
-	);
+	it.each(Object.values(MONSTERS))('$id matches the expected monster structure', (definition) => {
+		expectMonsterDefinition(definition, definition.id);
+	});
 });

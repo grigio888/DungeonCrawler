@@ -22,6 +22,10 @@ export default class BaseCharacter {
 		return this._spec.name;
 	}
 
+	get gender() {
+		return this._spec.gender;
+	}
+
 	get classId() {
 		return this._spec.classId;
 	}

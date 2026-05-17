@@ -20,8 +20,7 @@ export function distributeStatPoints(totalPoints, weights) {
 	/** @type {Record<string, number>} */
 	const result = Object.fromEntries(exact.map(({ key, quotient }) => [key, Math.floor(quotient)]));
 
-	let leftover =
-		totalPoints - Object.values(result).reduce((sum, value) => sum + value, 0);
+	let leftover = totalPoints - Object.values(result).reduce((sum, value) => sum + value, 0);
 
 	const byRemainder = [...exact].sort((a, b) => {
 		const fractionDiff = (b.quotient % 1) - (a.quotient % 1);
