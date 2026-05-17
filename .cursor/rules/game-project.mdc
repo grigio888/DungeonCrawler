@@ -1,0 +1,28 @@
+---
+description: Core game project context — read agents/ before changing lib or tests
+alwaysApply: true
+---
+
+# Game project
+
+This is a SvelteKit game. Game logic lives in `src/lib/` with **registry + definition + factory** patterns.
+
+## Required reading
+
+Before changing `src/lib/` or `tests/`, read [agents/README.md](../../agents/README.md) and follow [agents/guidelines/](../../agents/guidelines/).
+
+## Skills
+
+| Task | Skill |
+|------|--------|
+| New/changed definitions, index, types | `game-data-registry` (`.cursor/skills/data-registry/`) |
+| Tests for registries/factories | `game-registry-tests` (`.cursor/skills/registry-tests/`) |
+
+## Hard rules
+
+- Tests mirror `src/lib/` under `tests/` — no per-entity definition test files.
+- Registry keys must equal `definition.id`.
+- Factories validate with `id in REGISTRY`, never `switch` + `Object.keys().includes()`.
+- Shared JSDoc types in domain `types.js`, derived from `index.js`.
+
+Reference: `src/lib/items/weapons/` and `tests/lib/items/weapons/`.

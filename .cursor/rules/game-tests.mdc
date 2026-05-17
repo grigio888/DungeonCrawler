@@ -1,0 +1,15 @@
+---
+description: Vitest tests and validators for game lib
+globs: tests/**/*
+alwaysApply: false
+---
+
+# Game tests
+
+Apply [agents/guidelines/04-testing.md](../../agents/guidelines/04-testing.md).
+
+- Iterate registries with `it.each(Object.entries(...))` — do not test single entities in isolation.
+- Put shape checks in `validateDefinition.js` (or domain equivalent).
+- Run `npm run test:run` after changes.
+
+Use skill **game-registry-tests** when adding or refactoring tests.

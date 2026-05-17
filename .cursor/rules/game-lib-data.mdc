@@ -1,0 +1,15 @@
+---
+description: Registry definitions, indexes, factories, and types under src/lib
+globs: src/lib/**/{definition,index,factory,types}.js
+alwaysApply: false
+---
+
+# Game data files
+
+Apply [agents/guidelines/01-data-registries.md](../../agents/guidelines/01-data-registries.md), [02-factories.md](../../agents/guidelines/02-factories.md), [03-js-types.md](../../agents/guidelines/03-js-types.md).
+
+- Index: `const X = /** @type {const} */ ({ [def.id]: def })`
+- Factory: `if (!(id in REGISTRY)) throw ...`
+- Types: `keyof typeof import('./index.js').default`
+
+Use skill **game-data-registry** when adding a new entity domain.
