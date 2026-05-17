@@ -20,6 +20,7 @@ Before changing `src/lib/` or `tests/`, read [agents/README.md](../../agents/REA
 
 ## Hard rules
 
+- Never use nested ternary operators — use `if/else` or a helper ([agents/guidelines/05-code-style.md](../../agents/guidelines/05-code-style.md)).
 - Tests mirror `src/lib/` under `tests/` — no per-entity definition test files.
 - Registry keys must equal `definition.id`.
 - Factories validate with `id in REGISTRY`, never `switch` + `Object.keys().includes()`.
