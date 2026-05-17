@@ -1,22 +1,60 @@
-import { CLASS_IDS, getClassDefaults } from '$lib/classes/index.js';
+import { computeVitals } from '$lib/progression';
+import { resolveCharacterScales } from '$lib/progression/characterScales.js';
+import { getClassDefinition } from '$lib/classes';
 
 /** @typedef {'male' | 'female'} Gender */
 /** @typedef {'player' | 'npc' | 'enemy'} CharacterKind */
 
 /**
- * @param {Partial<CharacterSpec>} overrides
- * @returns {CharacterSpec}
+ * @param {string} classId
+ * @param {number} level
+ * @param {string | null} [subclassId]
+ * @param {Object} [options]
+ * @param {Record<string, number>} [options.existingScales]
+ * @param {number} [options.previousLevel]
+ */
+export function buildCharacterStats(classId, level, subclassId = null, options = {}) {
+	void subclassId;
+	const classDef = getClassDefinition(classId);
+	const scales = resolveCharacterScales({
+		level,
+		statWeights: classDef.statWeights,
+		existingScales: options.existingScales,
+		previousLevel: options.previousLevel
+	});
+	const { maxHp, maxSp } = computeVitals(scales, classDef.baseVitals ?? {}, {
+		level,
+		vitalProgression: classDef.vitalProgression ?? null
+	});
+
+	return { scales, maxHp, maxSp };
+}
+
+/**
+ * @param {Partial<CharacterSpec> & Record<string, unknown>} [overrides]
+ * @returns {CharacterSpec & Record<string, unknown>}
  */
 export function createCharacterSpec(overrides = {}) {
-	const classId = overrides.classId ?? CLASS_IDS.SWORDSMAN;
+	const classId = overrides.classId ?? 'peasant';
 	const subclassId = overrides.subclassId ?? null;
-	const defaults = getClassDefaults(classId, subclassId);
+	const classDef = getClassDefinition(classId);
+	const level = overrides.level ?? classDef.level ?? 1;
+	const previousLevel =
+		typeof overrides.previousLevel === 'number' ? overrides.previousLevel : undefined;
 
-	const maxHp = overrides.maxHp ?? defaults.maxHp;
-	const maxSp = overrides.maxSp ?? defaults.maxSp;
-	const stats = /** @type {CharacterSpec['stats']} */ ({
-		...defaults.stats,
-		...overrides.stats
+	const scales = resolveCharacterScales({
+		level,
+		statWeights: classDef.statWeights,
+		existingScales:
+			overrides.scales != null
+				? /** @type {Record<string, number>} */ (overrides.scales)
+				: undefined,
+		previousLevel
+	});
+
+	const { maxHp, maxSp } = computeVitals(scales, classDef.baseVitals ?? {}, {
+		level,
+		vitalProgression: classDef.vitalProgression ?? null
 	});
 
 	return {
@@ -26,15 +64,18 @@ export function createCharacterSpec(overrides = {}) {
 		gender: overrides.gender ?? 'female',
 		classId,
 		subclassId,
-		level: overrides.level ?? 1,
+		level,
 		jobLevel: overrides.jobLevel ?? 1,
 		exp: overrides.exp ?? 0,
 		jobExp: overrides.jobExp ?? 0,
 		hp: overrides.hp ?? maxHp,
-		maxHp,
+		maxHp: overrides.maxHp ?? maxHp,
 		sp: overrides.sp ?? maxSp,
-		maxSp,
-		stats,
+		maxSp: overrides.maxSp ?? maxSp,
+		scales,
+		statWeights: classDef.statWeights,
+		baseVitals: classDef.baseVitals ?? {},
+		vitalProgression: classDef.vitalProgression ?? null,
 		statPoints: overrides.statPoints ?? 0,
 		skillPoints: overrides.skillPoints ?? 0,
 		zeny: overrides.zeny ?? 0,
@@ -42,6 +83,7 @@ export function createCharacterSpec(overrides = {}) {
 		statusEffects: overrides.statusEffects ?? [],
 		equipment: overrides.equipment ?? createEmptyEquipment(),
 		position: overrides.position ?? null,
+		skills: overrides.skills ?? classDef.skills ?? [],
 		...pickMeta(overrides)
 	};
 }
@@ -62,7 +104,11 @@ export function createCharacterSpec(overrides = {}) {
  * @property {number} maxHp
  * @property {number} sp
  * @property {number} maxSp
- * @property {{ str: number, agi: number, vit: number, int: number, dex: number, luk: number }} stats
+ * @property {Record<string, number>} scales
+ * @property {Record<string, number>} statWeights
+ * @property {{ hp?: number, mp?: number }} baseVitals
+ * @property {{ hpPerLevel?: number, spPerLevel?: number } | null} vitalProgression
+ * @property {string[]} skills
  * @property {number} statPoints
  * @property {number} skillPoints
  * @property {number} zeny
@@ -105,6 +151,8 @@ function pickMeta(overrides) {
 		'classId',
 		'subclassId',
 		'level',
+		'previousLevel',
+		'previousClassId',
 		'jobLevel',
 		'exp',
 		'jobExp',
@@ -112,7 +160,11 @@ function pickMeta(overrides) {
 		'maxHp',
 		'sp',
 		'maxSp',
-		'stats',
+		'scales',
+		'statWeights',
+		'baseVitals',
+		'vitalProgression',
+		'skills',
 		'statPoints',
 		'skillPoints',
 		'zeny',

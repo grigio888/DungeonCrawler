@@ -26,4 +26,22 @@ describe('progression/buildStats', () => {
 		expect(maxHp).toBe(10 + (scales[SCALES.VITALITY] ?? 0) * 5);
 		expect(maxSp).toBe(5 + (scales[SCALES.INTELLIGENCE] ?? 0) * 3);
 	});
+
+	it('adds class vital progression from level 2 onward', () => {
+		const vitalProgression = { hpPerLevel: 10, spPerLevel: 4 };
+		const level1 = buildStatsForLevel(1, weights, { hp: 20, mp: 8 }, vitalProgression);
+		const level5 = buildStatsForLevel(5, weights, { hp: 20, mp: 8 }, vitalProgression);
+
+		const levelBonusHp = (5 - 1) * 10;
+		const levelBonusSp = (5 - 1) * 4;
+
+		expect(level1.maxHp).toBe(20 + (level1.scales[SCALES.VITALITY] ?? 0) * 5);
+		expect(level1.maxSp).toBe(8 + (level1.scales[SCALES.INTELLIGENCE] ?? 0) * 3);
+		expect(level5.maxHp).toBe(
+			20 + levelBonusHp + (level5.scales[SCALES.VITALITY] ?? 0) * 5
+		);
+		expect(level5.maxSp).toBe(
+			8 + levelBonusSp + (level5.scales[SCALES.INTELLIGENCE] ?? 0) * 3
+		);
+	});
 });

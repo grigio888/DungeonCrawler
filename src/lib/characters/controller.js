@@ -1,11 +1,11 @@
-import { resolvePromptPath } from '$lib/classes/index.js';
-import { createCharacterSpec, createEmptyEquipment } from './specs.js';
+import { resolvePromptPath } from '$lib/classes';
+import { createCharacterSpec, createEmptyEquipment } from './factory.js';
 
 /**
  * Owns a single character's runtime spec: identity, progression, vitals, stats.
  */
-class BaseCharacter {
-	/** @param {import('./specs.js').CharacterSpec | Record<string, unknown>} [input] */
+export default class BaseCharacter {
+	/** @param {import('./factory.js').CharacterSpec | Record<string, unknown>} [input] */
 	constructor(input = {}) {
 		this._spec = createCharacterSpec(input);
 	}
@@ -50,15 +50,24 @@ class BaseCharacter {
 		return this._spec.maxSp;
 	}
 
+	get scales() {
+		return this._spec.scales;
+	}
+
+	/** Allocated combat stats (same keys as `scales`). */
 	get stats() {
-		return this._spec.stats;
+		return this._spec.scales;
+	}
+
+	get skills() {
+		return this._spec.skills;
 	}
 
 	get isAlive() {
 		return this._spec.hp > 0;
 	}
 
-	/** Relative path under `classes/assets/prompts/` */
+	/** Relative path under `classes/`. */
 	get promptPath() {
 		return resolvePromptPath(this._spec.classId, this._spec.subclassId);
 	}
@@ -71,10 +80,16 @@ class BaseCharacter {
 	}
 
 	/**
-	 * @param {Partial<import('./specs.js').CharacterSpec>} patch
+	 * @param {Partial<import('./factory.js').CharacterSpec>} patch
 	 */
 	patch(patch) {
-		this._spec = createCharacterSpec({ ...this._spec, ...patch });
+		const prev = this._spec;
+		this._spec = createCharacterSpec({
+			...prev,
+			...patch,
+			scales: patch.scales ?? prev.scales,
+			previousLevel: prev.level
+		});
 		return this;
 	}
 
@@ -118,7 +133,7 @@ class BaseCharacter {
 	}
 
 	/**
-	 * @param {import('./specs.js').CharacterSpec | Record<string, unknown>} data
+	 * @param {import('./factory.js').CharacterSpec | Record<string, unknown>} data
 	 */
 	static fromJSON(data) {
 		return new BaseCharacter(data);
@@ -128,5 +143,3 @@ class BaseCharacter {
 		return createEmptyEquipment();
 	}
 }
-
-export default BaseCharacter;

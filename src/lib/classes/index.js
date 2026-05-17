@@ -1,9 +1,11 @@
 /** Classes index */
 
-import peasantDefinition from './class 0/peasanant/definition';
+export { default } from './registry.js';
 
-const CLASSES = /** @type {const} */ ({
-	[peasantDefinition.id]: peasantDefinition
-});
+export const CLASS_IDS = {
+	PEASANT: 'peasant',
+	SWORDSMAN: 'swordsman',
+	MAGE: 'mage'
+};
 
-export default CLASSES;
+export { buildClassStats, getClassDefinition, resolvePromptPath } from './factory.js';

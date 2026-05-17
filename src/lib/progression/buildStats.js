@@ -26,8 +26,14 @@ export function pickAllocatableWeights(statWeights) {
  * @param {number} level
  * @param {Record<string, number>} statWeights
  * @param {{ hp?: number, mp?: number }} [baseVitals]
+ * @param {import('./vitals.js').VitalProgression | null} [vitalProgression]
  */
-export function buildStatsForLevel(level, statWeights, baseVitals = {}) {
+export function buildStatsForLevel(
+	level,
+	statWeights,
+	baseVitals = {},
+	vitalProgression = null
+) {
 	const pool = getTotalStatPoints(level);
 	const allocated = distributeStatPoints(pool, pickAllocatableWeights(statWeights));
 
@@ -38,7 +44,7 @@ export function buildStatsForLevel(level, statWeights, baseVitals = {}) {
 		scales[scale] = value;
 	}
 
-	const { maxHp, maxSp } = computeVitals(scales, baseVitals);
+	const { maxHp, maxSp } = computeVitals(scales, baseVitals, { level, vitalProgression });
 
 	return { scales, maxHp, maxSp };
 }
