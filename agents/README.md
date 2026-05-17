@@ -15,6 +15,7 @@ Use this folder on **every** change to game data, factories, or tests. Cursor lo
 | ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Adding or editing a definition / index / factory | [guidelines/01-data-registries.md](guidelines/01-data-registries.md), [guidelines/02-factories.md](guidelines/02-factories.md), [guidelines/03-js-types.md](guidelines/03-js-types.md) |
 | Adding or changing tests                         | [guidelines/04-testing.md](guidelines/04-testing.md)                                                                                                                                   |
+| Writing or reviewing JS / Svelte logic           | [guidelines/05-code-style.md](guidelines/05-code-style.md)                                                                                                                             |
 | New domain (classes, skills, items…)             | All guidelines + copy the weapons pattern                                                                                                                                              |
 
 ## Commands

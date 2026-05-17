@@ -25,6 +25,7 @@ Extend this table when adding item categories or other domains.
 
 ## Do not
 
+- Use nested ternary operators — see [05-code-style.md](05-code-style.md).
 - Use `switch (id) { case Object.keys(REGISTRY).includes(id): }` — compares id to boolean; always wrong.
 - Add `tests/.../001_foo/definition.test.js` for a single entity.
 - Hardcode entity IDs in tests when the registry can be iterated.
