@@ -4,7 +4,7 @@ Copy into the matching nodes in `Illustrious_GGUF_Monster_PixelArt.json`.
 
 ## Positive (Base)
 
-masterpiece, best quality, score_9, score_8_up, score_7_up, source_anime, ROSPRITE, Ragnarok online character, Black filled oval eyes, no mouth, no nose, game monster sprite, enemy sprite, solo, one creature only, full body, chibi, transparent background, simple background, white background, character on center, flat colors, hard edges, pixel art
+masterpiece, best quality, score_9, score_8_up, score_7_up, source_anime, ROSPRITE, Ragnarok online character, Black filled oval eyes, no mouth, no nose, game monster sprite, enemy sprite, solo, one creature only, full body, chibi, isometric, top-down RPG, facing south, front view, transparent background, simple background, white background, character on center, flat colors, hard edges, pixel art
 
 ## Negative (Base)
 
