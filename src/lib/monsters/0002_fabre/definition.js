@@ -10,21 +10,22 @@ export default {
 	kind: MONSTER_KIND.NORMAL,
 	tier: 0,
 	level: 1,
+	exp: 10,
 	statWeights: {
 		[SCALES.STRENGTH]: 0.1,
 		[SCALES.AGILITY]: 0.3,
-		[SCALES.VITALITY]: 0.15,
+		[SCALES.VITALITY]: 0.5,
 		[SCALES.INTELLIGENCE]: 0.05,
 		[SCALES.DEXTERITY]: 0.3,
 		[SCALES.LUCK]: 0.1
 	},
 	baseVitals: {
-		hp: 8,
-		mp: 5
+		hp: 14,
+		mp: 2
 	},
 	baseDamage: {
-		min: 2,
-		max: 5
+		min: 1,
+		max: 3
 	},
 	skills: ['0001_attack']
 };

@@ -61,7 +61,7 @@
 	const opponentSpriteUrl = $derived.by(() => {
 		if (!opponentView) return null;
 		if (opponentView.kind === 'monster') {
-			return resolveMonsterSpriteUrl(monsterSprites, opponentView.promptPath ?? '');
+			return resolveMonsterSpriteUrl(monsterSprites, opponentView.promptPath ?? '', 'idle');
 		}
 		if (!opponentView.spriteKey) return null;
 		return resolveClassSpriteUrl(

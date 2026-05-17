@@ -17,4 +17,8 @@ describe('sprites/characterSprite', () => {
 		expect(resolveFacing('south')).toBe(FACING.SW);
 		expect(buildCharacterSpriteKey(GENDER.FEMALE)).toBe('female_idle_sw');
 	});
+
+	it('supports non-idle animation keys', () => {
+		expect(buildCharacterSpriteKey(GENDER.FEMALE, FACING.NE, 'dead')).toBe('female_dead_ne');
+	});
 });

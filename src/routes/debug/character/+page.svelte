@@ -11,7 +11,7 @@
 		getTotalStatPoints
 	} from '$lib/progression';
 	import CLASSES, { resolvePromptPath } from '$lib/classes';
-	import { buildCharacterSpriteKey, resolveClassSpriteUrl } from '$lib/sprites';
+	import ClassSpritePreview from '$lib/components/debug/ClassSpritePreview.svelte';
 	import { untrack } from 'svelte';
 	import { GENDER, GENDER_VALUES, createCharacterSpec } from '$lib/characters';
 	import SkillFactory from '$lib/skills/factory';
@@ -20,12 +20,6 @@
 
 	const classIds = Object.keys(CLASSES).sort();
 	const scaleKeys = Object.values(SCALES);
-
-	const sprites = import.meta.glob('$lib/classes/**/sprites/*.{png,webp,gif}', {
-		eager: true,
-		query: '?url',
-		import: 'default'
-	});
 
 	let classId = $state(classIds[0] ?? 'peasant');
 	let level = $state(1);
@@ -74,6 +68,7 @@
 	});
 
 	const definition = $derived(CLASSES[classId]);
+	const spritePromptPath = $derived(resolvePromptPath(classId, null));
 	const spec = $derived(previewSpec);
 	const character = $derived.by(() => {
 		if (!spec) return null;
@@ -97,14 +92,6 @@
 	});
 	const statPointPool = $derived(getTotalStatPoints(level));
 	const expectedStatTotal = $derived(getExpectedCharacterStatTotal(level));
-
-	const spriteUrl = $derived.by(() => {
-		if (!spec) return null;
-
-		const promptPath = resolvePromptPath(spec.classId, spec.subclassId);
-		const spriteKey = buildCharacterSpriteKey(spec.gender, spec.position?.facing);
-		return resolveClassSpriteUrl(sprites, promptPath, spriteKey);
-	});
 
 	const allocatedStatTotal = $derived(
 		spec
@@ -267,31 +254,15 @@
 						</div>
 					</dl>
 				</section>
-
-				{#if spriteUrl}
-					<div class="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/80 p-4">
-						<p class="mb-3 text-xs tracking-wide text-zinc-500 uppercase">Sprite</p>
-						<img
-							src={spriteUrl}
-							alt="{character.name} sprite"
-							class="image-pixelated mx-auto max-h-48 w-auto"
-						/>
-					</div>
-				{:else}
-					<div
-						class="rounded-xl border border-dashed border-zinc-800 bg-zinc-900/40 p-6 text-center text-sm text-zinc-500"
-					>
-						No sprite at<br />
-						<code class="text-xs">classes/{definition?.promptPath ?? classId}/sprites/</code>
-					</div>
-				{/if}
 			</aside>
 
 			<div class="min-w-0 space-y-6">
 				{#if character && spec}
 					<section class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
 						<h2 class="text-lg font-medium text-emerald-300/90">Identity</h2>
-						<dl class="mt-4 grid gap-3 sm:grid-cols-2">
+
+						<div class="mt-4 grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,26rem)]">
+							<dl class="grid gap-3 sm:grid-cols-2">
 							<div>
 								<dt class="text-xs text-zinc-500 uppercase">Name</dt>
 								<dd class="mt-0.5 font-medium">{character.name}</dd>
@@ -332,7 +303,12 @@
 								<dt class="text-xs text-zinc-500 uppercase">Alive</dt>
 								<dd class="mt-0.5">{character.isAlive ? 'yes' : 'no'}</dd>
 							</div>
-						</dl>
+							</dl>
+
+							{#key `${spritePromptPath}-${gender}`}
+								<ClassSpritePreview promptPath={spritePromptPath} {gender} />
+							{/key}
+						</div>
 					</section>
 
 					<section class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
@@ -450,9 +426,3 @@
 	</div>
 </main>
 
-<style>
-	.image-pixelated {
-		image-rendering: pixelated;
-		image-rendering: crisp-edges;
-	}
-</style>

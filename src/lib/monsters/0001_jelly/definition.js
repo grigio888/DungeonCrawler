@@ -20,7 +20,7 @@ export default {
 		[SCALES.LUCK]: 0.15
 	},
 	baseVitals: {
-		hp: 10,
+		hp: 8,
 		mp: 5
 	},
 	baseDamage: {

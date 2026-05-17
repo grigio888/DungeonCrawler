@@ -219,6 +219,7 @@
 
 					<div class="border-b border-zinc-800 p-4">
 						<p class="mb-3 text-xs font-medium tracking-wide text-zinc-500 uppercase">Sprite</p>
+
 						<div
 							class="mx-auto flex h-80 w-80 items-center justify-center rounded-xl border border-zinc-700 bg-zinc-950 p-4"
 						>

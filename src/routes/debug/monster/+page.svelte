@@ -2,6 +2,7 @@
 	import { SCALES } from '$lib/enums';
 	import { getPointsPerLevel, getTotalStatPoints } from '$lib/progression';
 	import MONSTERS, { BaseMonster } from '$lib/monsters';
+	import { getMonsterSpritePath, resolveMonsterSpriteUrl } from '$lib/sprites';
 	import SkillFactory from '$lib/skills/factory';
 
 	const monsterIds = Object.keys(MONSTERS).sort();
@@ -21,14 +22,8 @@
 	const spec = $derived(monster.spec);
 	const statPointPool = $derived(getTotalStatPoints(level));
 
-	const spriteUrl = $derived.by(() => {
-		for (const [path, url] of Object.entries(sprites)) {
-			if (path.includes(`/monsters/${monsterId}/sprites/`)) {
-				return /** @type {string} */ (url);
-			}
-		}
-		return null;
-	});
+	const spriteUrl = $derived(resolveMonsterSpriteUrl(sprites, monsterId));
+	const spritePathHint = $derived(getMonsterSpritePath(monsterId));
 
 	const allocatedStatTotal = $derived(
 		scaleKeys.reduce((sum, key) => {
@@ -135,8 +130,9 @@
 					<div
 						class="rounded-xl border border-dashed border-zinc-800 bg-zinc-900/40 p-6 text-center text-sm text-zinc-500"
 					>
-						No sprite at<br />
-						<code class="text-xs">monsters/{monsterId}/sprites/</code>
+						<p>No sprite found.</p>
+						<p class="mt-2 text-xs">Add a PNG here, then refresh the page:</p>
+						<code class="mt-2 block text-[10px] text-zinc-400">{spritePathHint}</code>
 					</div>
 				{/if}
 			</aside>

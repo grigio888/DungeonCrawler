@@ -31,15 +31,4 @@ export function resolveClassSpriteUrl(globEntries, promptPath, spriteKey, gender
 	return null;
 }
 
-/**
- * @param {Record<string, unknown>} globEntries
- * @param {string} monsterId
- */
-export function resolveMonsterSpriteUrl(globEntries, monsterId) {
-	for (const [path, url] of Object.entries(globEntries)) {
-		if (path.includes(`/monsters/${monsterId}/sprites/`)) {
-			return /** @type {string} */ (url);
-		}
-	}
-	return null;
-}
+export { resolveMonsterSpriteUrl } from '$lib/sprites/monsterSprite.js';

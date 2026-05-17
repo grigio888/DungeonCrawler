@@ -7,6 +7,13 @@ export {
 export {
 	buildCharacterSpriteKey,
 	isValidFacing,
+	listClassSpriteOptions,
 	resolveFacing
 } from './characterSprite.js';
-export { resolveClassSpriteUrl, resolveMonsterSpriteUrl } from '../battle/sprites.js';
+export { resolveClassSpriteUrl } from '../battle/sprites.js';
+export {
+	DEFAULT_MONSTER_SPRITE,
+	getMonsterSpritePath,
+	listMonsterSpriteFiles,
+	resolveMonsterSpriteUrl
+} from './monsterSprite.js';
