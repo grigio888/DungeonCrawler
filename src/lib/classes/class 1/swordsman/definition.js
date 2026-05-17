@@ -19,6 +19,10 @@ export default {
 		[SCALES.DEXTERITY]: 0.15,
 		[SCALES.LUCK]: 0.1
 	},
+	baseDamage: {
+		min: 2,
+		max: 6
+	},
 	baseVitals: {
 		hp: 40,
 		mp: 8

@@ -5,10 +5,14 @@ import {
 } from '$lib/progression/characterScales.js';
 import { getClassDefinition } from '$lib/classes';
 
+import { DEFAULT_FACING } from '$lib/sprites';
+
 import { GENDER, GENDER_VALUES } from './enums.js';
 
 /** @typedef {import('./enums.js').Gender} Gender */
 /** @typedef {'player' | 'npc' | 'enemy'} CharacterKind */
+/** @typedef {[string, number]} ClassHistoryEntry */
+/** @typedef {ClassHistoryEntry[]} ClassHistory */
 
 /**
  * @typedef {Object} BaseCharacterInput
@@ -108,15 +112,19 @@ export function createCharacterSpec(overrides = {}) {
 	const previousLevel =
 		typeof overrides.previousLevel === 'number' ? overrides.previousLevel : undefined;
 
+	let existingScales;
+	if (previousLevel != null) {
+		existingScales = base.scales;
+	} else if (overrides.scales != null) {
+		existingScales = /** @type {Record<string, number>} */ (overrides.scales);
+	} else {
+		existingScales = undefined;
+	}
+
 	const scales = resolveCharacterScales({
 		level,
 		statWeights: classDef.statWeights,
-		existingScales:
-			previousLevel != null
-				? base.scales
-				: overrides.scales != null
-					? /** @type {Record<string, number>} */ (overrides.scales)
-					: undefined,
+		existingScales,
 		previousLevel
 	});
 
@@ -125,12 +133,18 @@ export function createCharacterSpec(overrides = {}) {
 		vitalProgression: classDef.vitalProgression ?? null
 	});
 
+	const classHistory =
+		overrides.classHistory != null
+			? /** @type {ClassHistory} */ (overrides.classHistory)
+			: [[classId, level]];
+
 	return {
 		id: overrides.id ?? createId(),
 		kind: base.kind,
 		name: base.name,
 		gender: base.gender,
 		classId,
+		classHistory,
 		subclassId,
 		level,
 		jobLevel: overrides.jobLevel ?? 1,
@@ -142,6 +156,7 @@ export function createCharacterSpec(overrides = {}) {
 		maxSp: overrides.maxSp ?? maxSp,
 		scales,
 		statWeights: classDef.statWeights,
+		baseDamage: classDef.baseDamage ?? { min: 1, max: 1 },
 		baseVitals: classDef.baseVitals ?? {},
 		vitalProgression: classDef.vitalProgression ?? null,
 		statPoints: overrides.statPoints ?? 0,
@@ -150,7 +165,7 @@ export function createCharacterSpec(overrides = {}) {
 		spriteKey: overrides.spriteKey ?? null,
 		statusEffects: overrides.statusEffects ?? [],
 		equipment: overrides.equipment ?? createEmptyEquipment(),
-		position: overrides.position ?? null,
+		position: overrides.position ?? { facing: DEFAULT_FACING },
 		skills: overrides.skills ?? classDef.skills ?? [],
 		...pickMeta(overrides)
 	};
@@ -163,6 +178,7 @@ export function createCharacterSpec(overrides = {}) {
  * @property {string} name
  * @property {Gender} gender
  * @property {string} classId
+ * @property {ClassHistory} classHistory
  * @property {string | null} subclassId
  * @property {number} level
  * @property {number} jobLevel
@@ -174,6 +190,7 @@ export function createCharacterSpec(overrides = {}) {
  * @property {number} maxSp
  * @property {Record<string, number>} scales
  * @property {Record<string, number>} statWeights
+ * @property {{ min: number, max: number }} baseDamage
  * @property {{ hp?: number, mp?: number }} baseVitals
  * @property {{ hpPerLevel?: number, spPerLevel?: number } | null} vitalProgression
  * @property {string[]} skills
@@ -217,6 +234,7 @@ function pickMeta(overrides) {
 		'name',
 		'gender',
 		'classId',
+		'classHistory',
 		'subclassId',
 		'level',
 		'previousLevel',
@@ -230,6 +248,7 @@ function pickMeta(overrides) {
 		'maxSp',
 		'scales',
 		'statWeights',
+		'baseDamage',
 		'baseVitals',
 		'vitalProgression',
 		'skills',

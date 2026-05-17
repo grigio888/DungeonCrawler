@@ -23,5 +23,9 @@ export default {
 		hp: 10,
 		mp: 5
 	},
+	baseDamage: {
+		min: 1,
+		max: 5
+	},
 	skills: ['0001_attack']
 };

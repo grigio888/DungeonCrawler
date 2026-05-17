@@ -1,4 +1,7 @@
-import { resolvePromptPath } from '$lib/classes';
+import { getClassDefinition, resolvePromptPath } from '$lib/classes';
+import { estimateDamage as computeDamage } from '$lib/combat';
+import WeaponFactory from '$lib/items/weapons/factory';
+import SkillFactory from '$lib/skills/factory';
 import { createCharacterSpec, createEmptyEquipment } from './factory.js';
 
 /**
@@ -67,6 +70,10 @@ export default class BaseCharacter {
 		return this._spec.skills;
 	}
 
+	get equipment() {
+		return this._spec.equipment;
+	}
+
 	get isAlive() {
 		return this._spec.hp > 0;
 	}
@@ -130,6 +137,39 @@ export default class BaseCharacter {
 		if (this._spec.sp < amount) return false;
 		this._spec.sp -= amount;
 		return true;
+	}
+
+	/** @returns {WeaponFactory | null} */
+	getEquippedWeapon() {
+		const weaponId = this._spec.equipment?.weapon;
+		if (!weaponId) return null;
+
+		try {
+			return new WeaponFactory(weaponId);
+		} catch {
+			return null;
+		}
+	}
+
+	/**
+	 * Estimates outgoing damage for a skill using class weights, skill scaling, and equipped weapon.
+	 * @param {string} [skillId]
+	 * @param {{ randomizeWeaponDamage?: boolean, randomizeBaseDamage?: boolean }} [options]
+	 */
+	estimateDamage(skillId = '0001_attack', options = {}) {
+		const classDef = getClassDefinition(this.classId);
+		const skill = new SkillFactory(skillId);
+		const weapon = this.getEquippedWeapon();
+
+		return computeDamage({
+			stats: this.scales,
+			classStatWeights: classDef.statWeights ?? this._spec.statWeights,
+			skillScales: skill.scales,
+			weapon: weapon ? { scales: weapon.scales, damage: weapon.damage } : null,
+			baseDamage: classDef.baseDamage ?? this._spec.baseDamage,
+			randomizeWeaponDamage: options.randomizeWeaponDamage ?? false,
+			randomizeBaseDamage: options.randomizeBaseDamage ?? false
+		});
 	}
 
 	toJSON() {

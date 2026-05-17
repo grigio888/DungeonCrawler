@@ -45,4 +45,22 @@ describe('monsters/factory', () => {
 		expect(monster.stats[SCALES.VITALITY]).toBe(monster.scales[SCALES.VITALITY]);
 		expect(monster.maxHp).toBeGreaterThan(monster.spec.baseVitals.hp);
 	});
+
+	it('includes base damage on the spec', () => {
+		const spec = createMonsterSpec({ monsterId: '0001_jelly', level: 1 });
+
+		expect(spec.baseDamage).toEqual(MONSTERS['0001_jelly'].baseDamage);
+	});
+
+	it('randomizes base damage when requested', () => {
+		const monster = new BaseMonster({ monsterId: '0001_jelly', level: 4 });
+		const rolls = new Set(
+			Array.from(
+				{ length: 30 },
+				() => monster.estimateDamage('0001_attack', { randomizeBaseDamage: true }).damage
+			)
+		);
+
+		expect(rolls.size).toBeGreaterThan(1);
+	});
 });

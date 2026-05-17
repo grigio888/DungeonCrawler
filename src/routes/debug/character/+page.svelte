@@ -11,6 +11,7 @@
 		getTotalStatPoints
 	} from '$lib/progression';
 	import CLASSES, { resolvePromptPath } from '$lib/classes';
+	import { buildCharacterSpriteKey, resolveClassSpriteUrl } from '$lib/sprites';
 	import { untrack } from 'svelte';
 	import { GENDER, GENDER_VALUES, createCharacterSpec } from '$lib/characters';
 	import SkillFactory from '$lib/skills/factory';
@@ -98,13 +99,11 @@
 	const expectedStatTotal = $derived(getExpectedCharacterStatTotal(level));
 
 	const spriteUrl = $derived.by(() => {
-		const promptPath = definition?.promptPath ?? classId;
-		for (const [path, url] of Object.entries(sprites)) {
-			if (path.includes(`/classes/${promptPath}/sprites/`)) {
-				return /** @type {string} */ (url);
-			}
-		}
-		return null;
+		if (!spec) return null;
+
+		const promptPath = resolvePromptPath(spec.classId, spec.subclassId);
+		const spriteKey = buildCharacterSpriteKey(spec.gender, spec.position?.facing);
+		return resolveClassSpriteUrl(sprites, promptPath, spriteKey);
 	});
 
 	const allocatedStatTotal = $derived(

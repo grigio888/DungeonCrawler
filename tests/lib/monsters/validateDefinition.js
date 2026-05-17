@@ -58,6 +58,13 @@ export function expectMonsterDefinition(definition, label = 'monster') {
 		}
 	}
 
+	expect(monster.baseDamage, `${label}.baseDamage`).toEqual(expect.any(Object));
+	const baseDamage = /** @type {{ min: number, max: number }} */ (monster.baseDamage);
+	expect(baseDamage.min, `${label}.baseDamage.min`).toEqual(expect.any(Number));
+	expect(baseDamage.max, `${label}.baseDamage.max`).toEqual(expect.any(Number));
+	expect(baseDamage.min).toBeGreaterThanOrEqual(0);
+	expect(baseDamage.max).toBeGreaterThanOrEqual(baseDamage.min);
+
 	expect(monster.skills, `${label}.skills`).toEqual(expect.any(Array));
 	for (const skill of /** @type {unknown[]} */ (monster.skills)) {
 		expect(typeof skill === 'string' || typeof skill === 'object').toBe(true);

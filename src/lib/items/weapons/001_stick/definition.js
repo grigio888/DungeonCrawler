@@ -11,17 +11,17 @@ export default {
 	category: ITEM_CATEGORIES.WEAPON,
 	rarity: RARITY.COMMON,
 	scales: {
-		[SCALES.HP]: 1,
-		[SCALES.MP]: 1,
-		[SCALES.STRENGTH]: 1,
-		[SCALES.AGILITY]: 1,
-		[SCALES.VITALITY]: 1,
-		[SCALES.INTELLIGENCE]: 0.5,
+		[SCALES.HP]: 0,
+		[SCALES.MP]: 0,
+		[SCALES.STRENGTH]: .5,
+		[SCALES.AGILITY]: 0,
+		[SCALES.VITALITY]: 0,
+		[SCALES.INTELLIGENCE]: 0,
 		[SCALES.DEXTERITY]: 0.5,
-		[SCALES.LUCK]: 0.5
+		[SCALES.LUCK]: 0
 	},
 	damage: {
-		min: 1,
+		min: 0.5,
 		max: 1
 	}
 };

@@ -19,12 +19,16 @@ export default {
 		[SCALES.DEXTERITY]: 0.17,
 		[SCALES.LUCK]: 0.16
 	},
+	baseDamage: {
+		min: 1,
+		max: 3
+	},
 	baseVitals: {
-		hp: 24,
+		hp: 15,
 		mp: 6
 	},
 	vitalProgression: {
-		hpPerLevel: 4,
+		hpPerLevel: 2.5,
 		spPerLevel: 1
 	}
 };

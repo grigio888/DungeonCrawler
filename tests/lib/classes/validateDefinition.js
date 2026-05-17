@@ -35,6 +35,13 @@ export function expectClassDefinition(definition, label = 'class', registry = {}
 
 	expect(weightSum, `${label}.statWeights sum`).toBeCloseTo(1, 5);
 
+	expect(classDef.baseDamage, `${label}.baseDamage`).toEqual(expect.any(Object));
+	const baseDamage = /** @type {{ min: number, max: number }} */ (classDef.baseDamage);
+	expect(baseDamage.min, `${label}.baseDamage.min`).toEqual(expect.any(Number));
+	expect(baseDamage.max, `${label}.baseDamage.max`).toEqual(expect.any(Number));
+	expect(baseDamage.min).toBeGreaterThanOrEqual(0);
+	expect(baseDamage.max).toBeGreaterThanOrEqual(baseDamage.min);
+
 	expect(classDef.baseVitals, `${label}.baseVitals`).toEqual(expect.any(Object));
 	const baseVitals = /** @type {Record<string, unknown>} */ (classDef.baseVitals);
 	expect(baseVitals.hp, `${label}.baseVitals.hp`).toEqual(expect.any(Number));

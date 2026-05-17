@@ -1,3 +1,5 @@
+import { estimateDamage as computeDamage } from '$lib/combat';
+import SkillFactory from '$lib/skills/factory';
 import { createMonsterSpec } from './factory.js';
 
 /**
@@ -116,6 +118,24 @@ export default class BaseMonster {
 		if (this._spec.sp < amount) return false;
 		this._spec.sp -= amount;
 		return true;
+	}
+
+	/**
+	 * Estimates outgoing damage for a skill using monster stat weights, skill scaling, and base damage.
+	 * @param {string} [skillId]
+	 * @param {{ randomizeBaseDamage?: boolean }} [options]
+	 */
+	estimateDamage(skillId = '0001_attack', options = {}) {
+		const skill = new SkillFactory(skillId);
+
+		return computeDamage({
+			stats: this.scales,
+			classStatWeights: this._spec.statWeights,
+			skillScales: skill.scales,
+			weapon: null,
+			baseDamage: this._spec.baseDamage,
+			randomizeBaseDamage: options.randomizeBaseDamage ?? false
+		});
 	}
 
 	toJSON() {

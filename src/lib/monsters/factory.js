@@ -53,6 +53,7 @@ export function createMonsterSpec(overrides = {}) {
 		skills: overrides.skills ?? defaults.skills ?? [],
 		statWeights: defaults.statWeights,
 		baseVitals: defaults.baseVitals ?? {},
+		baseDamage: defaults.baseDamage ?? { min: 1, max: 1 },
 		statusEffects: overrides.statusEffects ?? [],
 		spriteKey: overrides.spriteKey ?? null,
 		position: overrides.position ?? null,
@@ -75,6 +76,7 @@ export function createMonsterSpec(overrides = {}) {
  * @property {Record<string, number>} scales
  * @property {Record<string, number>} statWeights
  * @property {{ hp?: number, mp?: number }} baseVitals
+ * @property {{ min: number, max: number }} baseDamage
  * @property {string[]} skills
  * @property {unknown[]} statusEffects
  * @property {string | null} spriteKey
@@ -104,6 +106,7 @@ function pickMeta(overrides) {
 		'scales',
 		'statWeights',
 		'baseVitals',
+		'baseDamage',
 		'skills',
 		'statusEffects',
 		'spriteKey',
