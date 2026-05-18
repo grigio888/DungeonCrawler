@@ -152,8 +152,8 @@ describe('combat/damage', () => {
 
 		expect(isCritical).toBe(true);
 		expect(maxDamageRange({ min: 2, max: 8 })).toBe(8);
-		// initial 8 * 1 * 1 = 8
-		expect(damage).toBe(8);
+		// initial 8 * 1 * 1 = 8, then ×2 crit multiplier = 16
+		expect(damage).toBe(16);
 
 		random.mockRestore();
 	});

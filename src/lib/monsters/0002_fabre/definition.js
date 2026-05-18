@@ -13,10 +13,10 @@ export default {
 	exp: 10,
 	statWeights: {
 		[SCALES.STRENGTH]: 0.1,
-		[SCALES.AGILITY]: 0.3,
-		[SCALES.VITALITY]: 0.5,
+		[SCALES.AGILITY]: 0.25,
+		[SCALES.VITALITY]: 0.35,
 		[SCALES.INTELLIGENCE]: 0.05,
-		[SCALES.DEXTERITY]: 0.3,
+		[SCALES.DEXTERITY]: 0.15,
 		[SCALES.LUCK]: 0.1
 	},
 	baseVitals: {
