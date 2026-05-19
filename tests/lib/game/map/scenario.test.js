@@ -121,4 +121,22 @@ describe('game/map/isometric', () => {
 			expect(layout.entries[index].depth).toBeGreaterThanOrEqual(layout.entries[index - 1].depth);
 		}
 	});
+
+	it('centers tile geometry horizontally in the stage', () => {
+		const layout = buildIsoTileLayout(map, 0);
+		const halfW = layout.tileWidth / 2;
+		let minX = Infinity;
+		let maxX = -Infinity;
+
+		for (const entry of layout.entries) {
+			const anchorX = layout.offsetX + entry.screenX;
+			minX = Math.min(minX, anchorX - halfW);
+			maxX = Math.max(maxX, anchorX + halfW);
+		}
+
+		const contentCenter = (minX + maxX) / 2;
+		const stageCenter = layout.stageWidth / 2;
+
+		expect(contentCenter).toBeCloseTo(stageCenter, 5);
+	});
 });

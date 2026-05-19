@@ -9,12 +9,23 @@
 	} from '$lib/game/map/isoTileGeometry.js';
 
 	/**
+	 * @typedef {{
+	 *   coord: import('$lib/game/map/types.js').MapCoord,
+	 *   spriteUrl: string | null,
+	 *   side: 'player' | 'opponent'
+	 * }} MapCombatantMarker
+	 */
+
+	/**
 	 * @type {{
 	 *   map: import('$lib/game/map/types.js').GeneratedMap,
 	 *   scenarioRotation?: import('$lib/game/map/types.js').TileRotation,
 	 *   viewScale?: number,
 	 *   showBattleOutline?: boolean,
 	 *   interactive?: boolean,
+	 *   embedded?: boolean,
+	 *   combatants?: MapCombatantMarker[],
+	 *   overlay?: import('svelte').Snippet,
 	 *   selectedTile?: import('$lib/game/map/types.js').MapCoord | null,
 	 *   onTileSelect?: (tile: import('$lib/game/map/types.js').MapTile) => void
 	 * }}
@@ -25,9 +36,15 @@
 		viewScale = 1,
 		showBattleOutline = true,
 		interactive = false,
+		embedded = false,
+		combatants = [],
+		overlay,
 		selectedTile = null,
 		onTileSelect = undefined
 	} = $props();
+
+	const COMBATANT_SPRITE_WIDTH = 48;
+	const COMBATANT_SPRITE_HEIGHT = 56;
 
 	const layout = $derived(buildIsoTileLayout(map, scenarioRotation));
 	const displayWidth = $derived(Math.round(layout.stageWidth * viewScale));
@@ -40,6 +57,24 @@
 	const topPath = $derived(pointsToSvgPath(faces.top));
 	const leftPath = $derived(pointsToSvgPath(faces.left));
 	const rightPath = $derived(pointsToSvgPath(faces.right));
+
+	const combatantEntries = $derived.by(() => {
+		return combatants
+			.map((marker) => {
+				const entry = layout.entries.find(
+					(candidate) =>
+						candidate.tile.x === marker.coord.x && candidate.tile.y === marker.coord.y
+				);
+
+				if (!entry) {
+					return null;
+				}
+
+				return { marker, entry };
+			})
+			.filter((item) => item !== null)
+			.sort((left, right) => left.entry.depth - right.entry.depth);
+	});
 
 	/**
 	 * @param {string} terrainId
@@ -99,7 +134,13 @@
 	}
 </script>
 
-<div class="iso-viewport">
+<div class="iso-viewport" class:iso-viewport--embedded={embedded}>
+	<div
+		class="iso-stage"
+		class:iso-stage--embedded={embedded}
+		style:width="{displayWidth}px"
+		style:height="{displayHeight}px"
+	>
 	<svg
 		class="iso-canvas"
 		width={displayWidth}
@@ -163,7 +204,34 @@
 				{/if}
 			</g>
 		{/each}
+
+		{#each combatantEntries as { marker, entry } (`${marker.side}-${entry.tile.x}-${entry.tile.y}`)}
+			{#if marker.spriteUrl}
+				<g
+					class="iso-combatant"
+					class:iso-combatant--player={marker.side === 'player'}
+					class:iso-combatant--opponent={marker.side === 'opponent'}
+					transform="translate({anchorX(entry) + faces.centerX}, {anchorY(entry) + faces.centerY})"
+				>
+					<image
+						href={marker.spriteUrl}
+						x={-COMBATANT_SPRITE_WIDTH / 2}
+						y={-COMBATANT_SPRITE_HEIGHT / 2}
+						width={COMBATANT_SPRITE_WIDTH}
+						height={COMBATANT_SPRITE_HEIGHT}
+						class="iso-combatant__sprite"
+					/>
+				</g>
+			{/if}
+		{/each}
 	</svg>
+
+	{#if overlay}
+		<div class="iso-stage__overlay">
+			{@render overlay()}
+		</div>
+	{/if}
+	</div>
 </div>
 
 <style>
@@ -176,6 +244,35 @@
 		border-radius: 0.75rem;
 		border: 1px solid var(--color-border);
 		background: transparent;
+	}
+
+	.iso-viewport--embedded {
+		display: block;
+		width: max-content;
+		max-width: 100%;
+		padding: 0;
+		border: 0;
+		border-radius: 0;
+		overflow: visible;
+	}
+
+	.iso-stage--embedded {
+		display: block;
+	}
+
+	.iso-stage {
+		position: relative;
+	}
+
+	.iso-stage__overlay {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+
+	.iso-combatant__sprite {
+		image-rendering: pixelated;
+		image-rendering: crisp-edges;
 	}
 
 	.iso-canvas {

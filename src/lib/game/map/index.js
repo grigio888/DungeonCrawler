@@ -23,6 +23,7 @@ export {
 	withScenarioRotation,
 	projectGridCoordToIsoScreen
 } from './scenario.js';
+export { getBattleCombatantCoords } from './battlePlacement.js';
 export {
 	buildIsoTileLayout,
 	getScenarioFacing,
@@ -31,6 +32,7 @@ export {
 	yawRotateCoord,
 	yawInverseToGridCoord
 } from './isometric.js';
+export { getIsoTileDisplayCenter, getIsoTileScreenCenter } from './screenPosition.js';
 export {
 	BATTLE_GRID_SIZE,
 	MAP_PADDING,

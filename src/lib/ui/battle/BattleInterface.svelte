@@ -8,10 +8,22 @@
 		resolveMonsterSpriteUrl,
 		snapshotCombatant
 	} from '$lib/game/battle';
+	import {
+		createMapSeed,
+		DEFAULT_MAP_VIEW_SCALE,
+		generateMap,
+		getBattleCombatantCoords,
+		getIsoTileDisplayCenter
+	} from '$lib/game/map';
 	import SkillFactory from '$lib/content/skills/factory';
 	import BattleDamagePopup from '$lib/ui/battle/BattleDamagePopup.svelte';
+	import BattleSkillBar from '$lib/ui/battle/BattleSkillBar.svelte';
+	import MapGrid from '$lib/ui/map/MapGrid.svelte';
 	import Window from '$lib/ui/window/Window.svelte';
 	import ButtonRetangular from '$lib/ui/window/ButtonRetangular.svelte';
+
+	/** Fixed seed so the battle arena layout is stable between visits. */
+	const BATTLE_MAP_SEED = 42;
 
 	/**
 	 * @type {{
@@ -37,6 +49,10 @@
 	const battle = $derived(
 		player ? (battleProp ?? new Battle({ player, opponent, environment })) : null
 	);
+
+	const battleMap = $derived(generateMap({ seed: createMapSeed(BATTLE_MAP_SEED) }));
+	const combatantCoords = $derived(getBattleCombatantCoords(battleMap));
+	const mapViewScale = DEFAULT_MAP_VIEW_SCALE;
 
 	const classSprites = import.meta.glob('$lib/content/classes/**/sprites/*.{png,webp,gif}', {
 		eager: true,
@@ -77,6 +93,36 @@
 			opponentView.spriteKey
 		);
 	});
+
+	const mapCombatants = $derived.by(() => {
+		/** @type {{ coord: import('$lib/game/map/types.js').MapCoord, spriteUrl: string | null, side: 'player' | 'opponent' }[]} */
+		const markers = [];
+
+		if (playerSpriteUrl) {
+			markers.push({
+				coord: combatantCoords.player,
+				spriteUrl: playerSpriteUrl,
+				side: 'player'
+			});
+		}
+
+		if (opponentSpriteUrl) {
+			markers.push({
+				coord: combatantCoords.opponent,
+				spriteUrl: opponentSpriteUrl,
+				side: 'opponent'
+			});
+		}
+
+		return markers;
+	});
+
+	const playerTileCenter = $derived(
+		getIsoTileDisplayCenter(battleMap, combatantCoords.player, mapViewScale)
+	);
+	const opponentTileCenter = $derived(
+		getIsoTileDisplayCenter(battleMap, combatantCoords.opponent, mapViewScale)
+	);
 
 	/**
 	 * @param {number} current
@@ -181,203 +227,222 @@
 	});
 </script>
 
-<Window title={environment.name} class="m-0 flex min-h-[32rem] w-full max-w-none min-w-0 flex-col">
-	<p class="mb-3 text-sm text-text-muted">{environment.description}</p>
+{#snippet vitalsBars(view, hpBarClass, spBarClass)}
+	<div class="space-y-2 text-sm">
+		<div>
+			<div class="mb-1 flex justify-between text-xs text-text-muted">
+				<span>HP</span>
+				<span class="font-mono">{view.hp} / {view.maxHp}</span>
+			</div>
+			<div class="h-2 overflow-hidden rounded-full bg-bar-track">
+				<div
+					class="h-full transition-all duration-300 {hpBarClass}"
+					style:width="{barPercent(view.hp, view.maxHp)}%"
+				></div>
+			</div>
+		</div>
+		<div>
+			<div class="mb-1 flex justify-between text-xs text-text-muted">
+				<span>SP</span>
+				<span class="font-mono">{view.sp} / {view.maxSp}</span>
+			</div>
+			<div class="h-2 overflow-hidden rounded-full bg-bar-track">
+				<div
+					class="h-full transition-all duration-300 {spBarClass}"
+					style:width="{barPercent(view.sp, view.maxSp)}%"
+				></div>
+			</div>
+		</div>
+	</div>
+{/snippet}
 
-	<div class="grid flex-1 gap-3 lg:grid-cols-[1fr_auto_1fr] lg:items-end">
-		{#if player && playerView && battle}
-			<Window title="Player" class="m-0 w-full max-w-none min-w-0">
-				<div class="mb-3 flex items-start justify-between gap-3">
-					<div>
-						<p class="text-xs tracking-wide text-title-mid uppercase">Player</p>
-						<h3 class="font-semibold text-frame-dark">{playerView.name}</h3>
-						<p class="text-xs text-text-subtle">{playerView.label}</p>
-					</div>
-					<span class="rounded bg-parchment-aside px-2 py-0.5 font-mono text-xs text-text-muted"
-						>Lv.{playerView.level}</span
-					>
-				</div>
-
-				<div class="relative mx-auto mb-3 flex max-h-28 min-h-28 items-end justify-center">
-					{#if playerDamagePopup}
+<Window title={environment.name} class="m-0 flex min-h-144 w-full max-w-none min-w-0 flex-col">
+	<div class="rounded-lg bg-gradient-to-b from-surface-inset to-parchment-deep p-4">
+		<div class="relative min-h-112 w-full">
+			<div class="flex justify-center -translate-x-2/9">
+				<MapGrid map={battleMap} viewScale={mapViewScale} embedded combatants={mapCombatants}>
+				{#snippet overlay()}
+					{#if playerDamagePopup && playerTileCenter}
 						{#key playerDamagePopup.id}
-							<BattleDamagePopup
-								amount={playerDamagePopup.amount}
-								critical={playerDamagePopup.critical}
-								side="player"
-							/>
+							<div
+								class="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-1/2"
+								style:left="{playerTileCenter.x}px"
+								style:top="{playerTileCenter.y}px"
+							>
+								<BattleDamagePopup
+									amount={playerDamagePopup.amount}
+									critical={playerDamagePopup.critical}
+									side="player"
+								/>
+							</div>
 						{/key}
 					{/if}
-					{#if playerSpriteUrl}
-						<img src={playerSpriteUrl} alt={playerView.name} class="image-pixelated max-h-28" />
-					{/if}
-				</div>
 
-				<div class="space-y-2 text-sm">
-					<div>
-						<div class="mb-1 flex justify-between text-xs text-text-muted">
-							<span>HP</span>
-							<span class="font-mono">{playerView.hp} / {playerView.maxHp}</span>
-						</div>
-						<div class="h-2 overflow-hidden rounded-full bg-bar-track">
+					{#if opponentDamagePopup && opponentTileCenter}
+						{#key opponentDamagePopup.id}
 							<div
-								class="h-full bg-title-bottom transition-all duration-300"
-								style:width="{barPercent(playerView.hp, playerView.maxHp)}%"
-							></div>
-						</div>
-					</div>
-					<div>
-						<div class="mb-1 flex justify-between text-xs text-text-muted">
-							<span>SP</span>
-							<span class="font-mono">{playerView.sp} / {playerView.maxSp}</span>
-						</div>
-						<div class="h-2 overflow-hidden rounded-full bg-bar-track">
-							<div
-								class="h-full bg-title-mid transition-all duration-300"
-								style:width="{barPercent(playerView.sp, playerView.maxSp)}%"
-							></div>
-						</div>
-					</div>
-				</div>
-			</Window>
-		{:else}
-			<a
-				href={rosterHref}
-				class="group flex min-h-[14rem] flex-col items-center justify-center rounded-xl border border-dashed border-title-mid/40 bg-surface-inset p-6 text-center transition hover:border-title-mid hover:bg-selected-bg"
+								class="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-1/2"
+								style:left="{opponentTileCenter.x}px"
+								style:top="{opponentTileCenter.y}px"
+							>
+								<BattleDamagePopup
+									amount={opponentDamagePopup.amount}
+									critical={opponentDamagePopup.critical}
+									side="opponent"
+								/>
+							</div>
+						{/key}
+					{/if}
+				{/snippet}
+				</MapGrid>
+			</div>
+
+			<div class="pointer-events-none absolute inset-0 z-10">
+			<div
+				class="pointer-events-auto absolute top-3 left-1/2 z-30 flex -translate-x-1/2 flex-col items-center rounded-lg border border-border bg-parchment/92 px-4 py-3 text-center shadow-[0_4px_14px_rgba(12,30,46,0.12)] backdrop-blur-sm"
+				aria-live="polite"
 			>
-				<p class="text-xs tracking-wide text-title-mid uppercase">Player</p>
-				<p class="mt-3 text-lg font-semibold text-frame-dark group-hover:text-title-top">
-					No character
-				</p>
-				<p class="mt-2 max-w-[14rem] text-sm text-text-subtle group-hover:text-text-muted">
-					Create a character in the roster to battle here.
-				</p>
-				<p class="mt-4 text-xs font-medium text-title-mid group-hover:text-title-top">
-					Open roster →
-				</p>
-			</a>
-		{/if}
+				{#if !battle}
+					<p class="text-xs tracking-widest text-text-subtle uppercase">Battle</p>
+					<p class="text-sm text-text-muted">Waiting for a player character</p>
+				{:else if battle.isOver}
+					<p class="text-lg font-semibold text-gold">
+						{battle.phase === 'victory' ? 'Victory!' : 'Defeat'}
+					</p>
+				{:else}
+					<p class="text-xs tracking-widest text-text-subtle uppercase">Turn</p>
+					<p class="font-mono text-sm text-frame-dark">
+						{battle.turn === 'player' ? 'Your turn' : 'Opponent turn'}
+					</p>
+				{/if}
 
-		<div class="flex flex-col items-center justify-center gap-2 px-2 py-4 text-center">
-			{#if !battle}
-				<p class="text-xs tracking-widest text-text-subtle uppercase">Battle</p>
-				<p class="text-sm text-text-muted">Waiting for a player character</p>
-			{:else if battle.isOver}
-				<p class="text-lg font-semibold text-gold">
-					{battle.phase === 'victory' ? 'Victory!' : 'Defeat'}
-				</p>
-			{:else}
-				<p class="text-xs tracking-widest text-text-subtle uppercase">Turn</p>
-				<p class="font-mono text-sm text-frame-dark">
-					{battle.turn === 'player' ? 'Your turn' : 'Opponent turn'}
-				</p>
+				{#if battle?.lastAction && battle.lastAction.damage > 0}
+					<p class="mt-1 text-sm text-text-muted">
+						{#if battle.lastAction.isCritical}
+							<span class="font-semibold text-red-400">Critical!</span><br />
+						{/if}
+						{battle.lastAction.damage} damage · {describeSkill(
+							battle.lastAction.skillId ?? '0001_attack'
+						)}
+					</p>
+				{/if}
+
+				{#if battle}
+					<ButtonRetangular class="mt-2" label="reset battle" onclick={resetBattle} />
+				{/if}
+			</div>
+
+
+			{#if player && playerView && battle}
+				<div class="pointer-events-auto absolute bottom-3 left-3 z-20 flex items-end gap-2">
+					<Window title="" class="m-0 w-86 max-w-[calc(100%-2rem)] min-w-0">
+						<div class="mb-3 flex items-start justify-between gap-3">
+							<h3 class="min-w-0 truncate font-semibold text-frame-dark">{playerView.name}</h3>
+							<span
+								class="shrink-0 rounded bg-parchment-aside px-2 py-0.5 font-mono text-xs text-text-muted"
+								>Lv.{playerView.level}</span
+							>
+						</div>
+						{@render vitalsBars(playerView, 'bg-title-bottom', 'bg-title-mid')}
+					</Window>
+                    <BattleSkillBar
+                        skills={playerView.skills}
+                        disabled={battle.isOver || battle.turn !== 'player'}
+                        onSkill={onPlayerSkill}
+                    />
+					<!-- <Window title="" class="m-0 min-w-0 shrink-0">
+						<p class="mb-2 text-xs font-medium tracking-wide text-text-subtle uppercase">Skills</p>
+					</Window> -->
+				</div>
 			{/if}
 
-			{#if battle?.lastAction && battle.lastAction.damage > 0}
-				<p class="text-sm text-text-muted">
-					{#if battle.lastAction.isCritical}
-						<span class="font-semibold text-red-400">Critical!</span><br />
-					{/if}
-					{battle.lastAction.damage} damage · {describeSkill(
-						battle.lastAction.skillId ?? '0001_attack'
-					)}
-				</p>
-			{/if}
-
-			{#if battle}
-				<ButtonRetangular class="mt-2" label="reset battle" onclick={resetBattle} />
-			{/if}
+			<div class="pointer-events-auto absolute top-3 right-3 z-20">
+				<Window title="" class="m-0 w-86 max-w-[calc(100%-2rem)] min-w-0">
+					<div class="mb-3 flex items-start justify-between gap-3">
+						<h3 class="min-w-0 truncate font-semibold text-frame-dark">{opponentView.name}</h3>
+						<span
+							class="shrink-0 rounded bg-parchment-aside px-2 py-0.5 font-mono text-xs text-text-muted"
+							>Lv.{opponentView.level}</span
+						>
+					</div>
+					{@render vitalsBars(opponentView, 'bg-gold-dim', 'bg-frame-light')}
+				</Window>
+			</div>
+			</div>
 		</div>
-
-		<Window title="Opponent" class="m-0 w-full max-w-none min-w-0">
-			<div class="mb-3 flex items-start justify-between gap-3">
-				<div>
-					<p class="text-xs tracking-wide text-gold-dim uppercase">Opponent</p>
-					<h3 class="font-semibold text-frame-dark">{opponentView.name}</h3>
-					<p class="text-xs text-text-subtle">{opponentView.label}</p>
-				</div>
-				<span class="rounded bg-parchment-aside px-2 py-0.5 font-mono text-xs text-text-muted"
-					>Lv.{opponentView.level}</span
-				>
-			</div>
-
-			<div class="relative mx-auto mb-3 flex max-h-28 min-h-28 items-end justify-center">
-				{#if opponentDamagePopup}
-					{#key opponentDamagePopup.id}
-						<BattleDamagePopup
-							amount={opponentDamagePopup.amount}
-							critical={opponentDamagePopup.critical}
-							side="opponent"
-						/>
-					{/key}
-				{/if}
-				{#if opponentSpriteUrl}
-					<img src={opponentSpriteUrl} alt={opponentView.name} class="image-pixelated max-h-28" />
-				{/if}
-			</div>
-
-			<div class="space-y-2 text-sm">
-				<div>
-					<div class="mb-1 flex justify-between text-xs text-text-muted">
-						<span>HP</span>
-						<span class="font-mono">{opponentView.hp} / {opponentView.maxHp}</span>
-					</div>
-					<div class="h-2 overflow-hidden rounded-full bg-bar-track">
-						<div
-							class="h-full bg-gold-dim transition-all duration-300"
-							style:width="{barPercent(opponentView.hp, opponentView.maxHp)}%"
-						></div>
-					</div>
-				</div>
-				<div>
-					<div class="mb-1 flex justify-between text-xs text-text-muted">
-						<span>SP</span>
-						<span class="font-mono">{opponentView.sp} / {opponentView.maxSp}</span>
-					</div>
-					<div class="h-2 overflow-hidden rounded-full bg-bar-track">
-						<div
-							class="h-full bg-frame-light transition-all duration-300"
-							style:width="{barPercent(opponentView.sp, opponentView.maxSp)}%"
-						></div>
-					</div>
-				</div>
-			</div>
-		</Window>
 	</div>
 
-	{#if battle && playerView}
-		<div class="mt-3 border-t border-border pt-3">
-			<p class="mb-2 text-xs font-medium tracking-wide text-text-subtle uppercase">Actions</p>
-			<div class="flex flex-wrap gap-1">
-				{#each playerView.skills as skillId (skillId)}
-					<ButtonRetangular
-						label={describeSkill(skillId)}
-						disabled={battle.isOver || battle.turn !== 'player'}
-						onclick={() => onPlayerSkill(skillId)}
-					/>
-				{/each}
-			</div>
-
-			<dl class="mt-3 grid gap-2 text-xs text-text-subtle sm:grid-cols-2 lg:grid-cols-3">
-				{#if player && isCharacter(player)}
+	<section
+		class="mt-4 grid gap-4 border-t border-border pt-4 sm:grid-cols-2"
+		aria-label="Combatant details"
+	>
+		<div class="min-w-0">
+			<p class="mb-3 text-xs font-medium tracking-wide text-title-mid uppercase">Player</p>
+			{#if player && playerView && battle}
+				<div class="space-y-3 text-sm">
 					<div>
-						<dt class="uppercase">Weapon</dt>
-						<dd class="font-mono text-frame">
-							{player.getEquippedWeapon()?.name ?? 'Unarmed'}
-						</dd>
+						<h3 class="font-semibold text-frame-dark">{playerView.name}</h3>
+						{#if playerView.label}
+							<p class="text-xs text-text-subtle">{playerView.label}</p>
+						{/if}
 					</div>
-					<div>
-						<dt class="uppercase">Est. damage</dt>
-						<dd class="font-mono text-frame">{player.estimateDamage('0001_attack').damage}</dd>
-					</div>
-				{/if}
-				<div>
-					<dt class="uppercase">Opponent STR</dt>
-					<dd class="font-mono text-frame">{opponent.scales[SCALES.STRENGTH] ?? 0}</dd>
+					<p class="font-mono text-xs text-text-muted">Level {playerView.level}</p>
+					{@render vitalsBars(playerView, 'bg-title-bottom', 'bg-title-mid')}
+					<dl class="grid gap-2 text-xs text-text-subtle sm:grid-cols-2">
+						{#if isCharacter(player)}
+							<div>
+								<dt class="uppercase">Weapon</dt>
+								<dd class="font-mono text-frame">
+									{player.getEquippedWeapon()?.name ?? 'Unarmed'}
+								</dd>
+							</div>
+							<div>
+								<dt class="uppercase">Est. damage</dt>
+								<dd class="font-mono text-frame">{player.estimateDamage('0001_attack').damage}</dd>
+							</div>
+						{/if}
+					</dl>
 				</div>
-			</dl>
+			{:else}
+				<a
+					href={rosterHref}
+					class="group flex flex-col items-center justify-center rounded-sm border border-dashed border-title-mid/40 bg-parchment/95 p-6 text-center transition hover:border-title-mid hover:bg-selected-bg"
+				>
+					<p class="text-lg font-semibold text-frame-dark group-hover:text-title-top">No character</p>
+					<p class="mt-2 text-sm text-text-subtle group-hover:text-text-muted">
+						Create a character in the roster to battle here.
+					</p>
+					<p class="mt-4 text-xs font-medium text-title-mid group-hover:text-title-top">
+						Open roster →
+					</p>
+				</a>
+			{/if}
 		</div>
-	{/if}
+
+		<div class="min-w-0 sm:border-l sm:border-border sm:pl-4">
+			<p class="mb-3 text-xs font-medium tracking-wide text-gold-dim uppercase">Opponent</p>
+			<div class="space-y-3 text-sm">
+				<div>
+					<h3 class="font-semibold text-frame-dark">{opponentView.name}</h3>
+					{#if opponentView.label}
+						<p class="text-xs text-text-subtle">{opponentView.label}</p>
+					{/if}
+				</div>
+				<p class="font-mono text-xs text-text-muted">Level {opponentView.level}</p>
+				{@render vitalsBars(opponentView, 'bg-gold-dim', 'bg-frame-light')}
+				<dl class="grid gap-2 text-xs text-text-subtle sm:grid-cols-2">
+					<div>
+						<dt class="uppercase">Strength</dt>
+						<dd class="font-mono text-frame">{opponent.scales[SCALES.STRENGTH] ?? 0}</dd>
+					</div>
+					<div>
+						<dt class="uppercase">Status</dt>
+						<dd class="font-mono text-frame">{opponentView.isAlive ? 'Active' : 'Defeated'}</dd>
+					</div>
+				</dl>
+			</div>
+		</div>
+	</section>
 
 	{#snippet footer()}
 		<p class="text-xs font-medium tracking-wide text-text-subtle uppercase">Battle log</p>
@@ -397,10 +462,3 @@
 		{/if}
 	{/snippet}
 </Window>
-
-<style>
-	.image-pixelated {
-		image-rendering: pixelated;
-		image-rendering: crisp-edges;
-	}
-</style>
