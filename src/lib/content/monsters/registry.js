@@ -1,11 +1,11 @@
 /** Monsters registry */
 
-import fabreDefinition from './0002_fabre/definition';
+import caterDefinition from './0002_cater/definition';
 import jellyDefinition from './0001_jelly/definition';
 
 const MONSTERS = /** @type {const} */ ({
 	[jellyDefinition.id]: jellyDefinition,
-	[fabreDefinition.id]: fabreDefinition
+	[caterDefinition.id]: caterDefinition
 });
 
 export default MONSTERS;

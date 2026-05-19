@@ -5,6 +5,7 @@ export { LEVEL_PROGRESSION } from './progression.js';
 export { GENDER } from './characters.js';
 export { MONSTER_KIND } from './monsters.js';
 export { FACING } from './sprites.js';
+export { TERRAIN_ROLE } from './terrain.js';
 
 /** @typedef {import('./characters.js').Gender} Gender */
 /** @typedef {import('./sprites.js').Facing} Facing */

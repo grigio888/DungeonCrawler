@@ -8,7 +8,8 @@
 		{ path: '/debug/monster', label: 'Monsters' },
 		{ path: '/debug/character', label: 'Inspector' },
 		{ path: '/debug/roster', label: 'Roster' },
-		{ path: '/debug/battle', label: 'Battle' }
+		{ path: '/debug/battle', label: 'Battle' },
+		{ path: '/debug/map', label: 'Map' }
 	];
 </script>
 

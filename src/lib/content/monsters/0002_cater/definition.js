@@ -4,8 +4,8 @@ import { MONSTER_KIND } from '$lib/core/enum/monsters.js';
 import { SCALES } from '$lib/core/enum/stats.js';
 
 export default {
-	id: '0002_fabre',
-	name: 'Fabre',
+	id: '0002_cater',
+	name: 'Cater',
 	description: 'A small green caterpillar monster.',
 	kind: MONSTER_KIND.NORMAL,
 	tier: 0,
