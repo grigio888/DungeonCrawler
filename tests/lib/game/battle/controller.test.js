@@ -61,6 +61,17 @@ describe('battle/controller', () => {
 		expect(snapshot.spriteKey).toBe(`female_idle_${FACING.SW}`);
 	});
 
+	it('snapshots use dead sprite key when character hp is 0', () => {
+		const battle = new Battle(createSetup());
+		battle.player.takeDamage(battle.player.hp);
+
+		const snapshot = battle.getSnapshot('player');
+
+		expect(snapshot.isAlive).toBe(false);
+		expect(snapshot.hp).toBe(0);
+		expect(snapshot.spriteKey).toBe(`female_dead_${FACING.SW}`);
+	});
+
 	it('records critical hits on battle actions', () => {
 		const random = vi.spyOn(Math, 'random');
 		random.mockReturnValueOnce(0); // force critical on first damage roll

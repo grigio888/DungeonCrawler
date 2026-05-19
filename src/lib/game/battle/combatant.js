@@ -48,7 +48,8 @@ export function snapshotCombatant(entity, side) {
  * @param {import('$lib/game/entities/character/controller.js').default} character
  */
 export function buildCharacterSpriteKey(character) {
-	return buildSpriteKey(character.gender, character.spec.position?.facing);
+	const animation = character.isAlive ? 'idle' : 'dead';
+	return buildSpriteKey(character.gender, character.spec.position?.facing, animation);
 }
 
 /**

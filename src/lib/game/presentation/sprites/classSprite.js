@@ -13,6 +13,15 @@ export function resolveClassSpriteUrl(globEntries, promptPath, spriteKey, gender
 		}
 	}
 
+	if (spriteKey.includes('_dead_')) {
+		const idleKey = spriteKey.replace('_dead_', '_idle_');
+		for (const [path, url] of Object.entries(globEntries)) {
+			if (matchesClassSpritePath(path, promptPath, idleKey)) {
+				return /** @type {string} */ (url);
+			}
+		}
+	}
+
 	if (!gender) return null;
 
 	for (const [path, url] of Object.entries(globEntries)) {
