@@ -11,11 +11,7 @@ Use instead:
 
 ```js
 // Bad
-const value = conditionA
-	? conditionB
-		? foo()
-		: bar()
-	: baz();
+const value = conditionA ? (conditionB ? foo() : bar()) : baz();
 
 // Good
 let value;

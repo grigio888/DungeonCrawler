@@ -12,7 +12,7 @@
 	];
 </script>
 
-<div class="min-h-screen bg-page text-text">
+<div class="bg-page min-h-screen text-text">
 	<nav
 		class="border-b border-border bg-[linear-gradient(180deg,var(--color-white)_0%,var(--color-parchment-deep)_100%)] text-sm shadow-[inset_0_-1px_0_rgba(255,255,255,0.8)]"
 	>

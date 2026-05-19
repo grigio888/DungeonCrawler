@@ -10,3 +10,5 @@ export const MONSTER_KIND = {
 	/** MVP / raid boss. */
 	MVP: 'mvp'
 };
+
+/** @typedef {typeof MONSTER_KIND[keyof typeof MONSTER_KIND]} MonsterKind */

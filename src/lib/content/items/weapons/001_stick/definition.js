@@ -13,7 +13,7 @@ export default {
 	scales: {
 		[SCALES.HP]: 0,
 		[SCALES.MP]: 0,
-		[SCALES.STRENGTH]: .5,
+		[SCALES.STRENGTH]: 0.5,
 		[SCALES.AGILITY]: 0,
 		[SCALES.VITALITY]: 0,
 		[SCALES.INTELLIGENCE]: 0,

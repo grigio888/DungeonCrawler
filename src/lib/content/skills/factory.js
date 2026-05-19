@@ -1,9 +1,7 @@
 // ** Skill factory */
 
-// False positive for TIERS
-// eslint-disable-next-line no-unused-vars
 import { SCALES } from '$lib/core/enum/stats.js';
-import { SKILL_AFFINITY, SKILL_TARGET, SKILL_TYPES, TIERS } from '$lib/core/enum/skills.js';
+import { SKILL_AFFINITY } from '$lib/core/enum/skills.js';
 import SKILLS from './index.js';
 
 /** @typedef {import('./types.js').SkillId} SkillId */
@@ -61,7 +59,7 @@ export default class SkillFactory {
 	}
 
 	/**
-	 * @returns {TIERS}
+	 * @returns {import('$lib/core/enum/skills.js').Tier}
 	 * The progression tier of the skill in a skill tree.
 	 */
 	get tier() {
@@ -69,7 +67,7 @@ export default class SkillFactory {
 	}
 
 	/**
-	 * @returns {SKILL_TYPES}
+	 * @returns {import('$lib/core/enum/skills.js').SkillType}
 	 * The type of the skill.
 	 */
 	get type() {
@@ -110,7 +108,7 @@ export default class SkillFactory {
 	}
 
 	/**
-	 * @returns {SKILL_TARGET}
+	 * @returns {import('$lib/core/enum/skills.js').SkillTarget}
 	 * The target type of the skill.
 	 */
 	get target() {
@@ -118,7 +116,7 @@ export default class SkillFactory {
 	}
 
 	/**
-	 * @returns {SKILL_AFFINITY}
+	 * @returns {import('$lib/core/enum/skills.js').SkillAffinity}
 	 * The affinity of the skill.
 	 */
 	get affinity() {

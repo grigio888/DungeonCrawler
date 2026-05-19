@@ -50,6 +50,11 @@ export const SKILL_AFFINITY = {
 	MAGICAL: 'magical'
 };
 
+/** @typedef {typeof TIERS[keyof typeof TIERS]} Tier */
+/** @typedef {typeof SKILL_TARGET[keyof typeof SKILL_TARGET]} SkillTarget */
+/** @typedef {typeof SKILL_TYPES[keyof typeof SKILL_TYPES]} SkillType */
+/** @typedef {typeof SKILL_AFFINITY[keyof typeof SKILL_AFFINITY]} SkillAffinity */
+
 /**
  * Effect family applied by a skill.
  * @enum {string}

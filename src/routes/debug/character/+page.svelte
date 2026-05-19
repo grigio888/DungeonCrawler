@@ -156,7 +156,9 @@
 	<div class="mx-auto max-w-6xl px-4 py-8">
 		<header class="mb-8 border-b border-border pb-6">
 			<p class="text-sm font-medium tracking-wide text-title-mid uppercase">Debug</p>
-			<h1 class="mt-1 text-3xl font-semibold tracking-tight text-frame-dark">Character inspector</h1>
+			<h1 class="mt-1 text-3xl font-semibold tracking-tight text-frame-dark">
+				Character inspector
+			</h1>
 			<p class="mt-2 text-text-muted">
 				Pick a class and level to preview stat allocation, vital progression, and runtime spec.
 			</p>
@@ -166,7 +168,7 @@
 			<aside
 				class="flex min-h-0 flex-col gap-4 lg:sticky lg:top-6 lg:z-10 lg:max-h-[calc(100vh-2rem)] lg:self-start lg:overflow-y-auto"
 			>
-				<Window title="Configure" class="m-0 w-full min-w-0 max-w-none shrink-0">
+				<Window title="Configure" class="m-0 w-full max-w-none min-w-0 shrink-0">
 					<div class="space-y-4">
 						<label class="block">
 							<span class="mb-1 block text-sm text-text-muted">Class</span>
@@ -255,49 +257,49 @@
 
 			<div class="grid min-w-0 gap-4">
 				{#if character && spec}
-					<Window title="Identity" class="m-0 w-full min-w-0 max-w-none">
+					<Window title="Identity" class="m-0 w-full max-w-none min-w-0">
 						<div class="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,26rem)]">
 							<dl class="grid gap-3 sm:grid-cols-2">
-							<div>
-								<dt class="text-xs text-text-subtle uppercase">Name</dt>
-								<dd class="mt-0.5 font-medium">{character.name}</dd>
-							</div>
-							<div>
-								<dt class="text-xs text-text-subtle uppercase">Gender</dt>
-								<dd class="mt-0.5 capitalize">{character.gender}</dd>
-							</div>
-							<div>
-								<dt class="text-xs text-text-subtle uppercase">Class</dt>
-								<dd class="mt-0.5">{definition.name} ({character.classId})</dd>
-							</div>
-							<div>
-								<dt class="text-xs text-text-subtle uppercase">Instance ID</dt>
-								<dd class="mt-0.5 font-mono text-sm break-all">{character.id}</dd>
-							</div>
-							<div>
-								<dt class="text-xs text-text-subtle uppercase">Tier</dt>
-								<dd class="mt-0.5">{definition.tier}</dd>
-							</div>
-							<div>
-								<dt class="text-xs text-text-subtle uppercase">Level</dt>
-								<dd class="mt-0.5">{character.level}</dd>
-							</div>
-							<div>
-								<dt class="text-xs text-text-subtle uppercase">Display</dt>
-								<dd class="mt-0.5">{character.displayLabel}</dd>
-							</div>
-							<div class="sm:col-span-2">
-								<dt class="text-xs text-text-subtle uppercase">Description</dt>
-								<dd class="mt-0.5 text-frame">{definition.description}</dd>
-							</div>
-							<div>
-								<dt class="text-xs text-text-subtle uppercase">Prompt path</dt>
-								<dd class="mt-0.5 font-mono text-sm">{character.promptPath}</dd>
-							</div>
-							<div>
-								<dt class="text-xs text-text-subtle uppercase">Alive</dt>
-								<dd class="mt-0.5">{character.isAlive ? 'yes' : 'no'}</dd>
-							</div>
+								<div>
+									<dt class="text-xs text-text-subtle uppercase">Name</dt>
+									<dd class="mt-0.5 font-medium">{character.name}</dd>
+								</div>
+								<div>
+									<dt class="text-xs text-text-subtle uppercase">Gender</dt>
+									<dd class="mt-0.5 capitalize">{character.gender}</dd>
+								</div>
+								<div>
+									<dt class="text-xs text-text-subtle uppercase">Class</dt>
+									<dd class="mt-0.5">{definition.name} ({character.classId})</dd>
+								</div>
+								<div>
+									<dt class="text-xs text-text-subtle uppercase">Instance ID</dt>
+									<dd class="mt-0.5 font-mono text-sm break-all">{character.id}</dd>
+								</div>
+								<div>
+									<dt class="text-xs text-text-subtle uppercase">Tier</dt>
+									<dd class="mt-0.5">{definition.tier}</dd>
+								</div>
+								<div>
+									<dt class="text-xs text-text-subtle uppercase">Level</dt>
+									<dd class="mt-0.5">{character.level}</dd>
+								</div>
+								<div>
+									<dt class="text-xs text-text-subtle uppercase">Display</dt>
+									<dd class="mt-0.5">{character.displayLabel}</dd>
+								</div>
+								<div class="sm:col-span-2">
+									<dt class="text-xs text-text-subtle uppercase">Description</dt>
+									<dd class="mt-0.5 text-frame">{definition.description}</dd>
+								</div>
+								<div>
+									<dt class="text-xs text-text-subtle uppercase">Prompt path</dt>
+									<dd class="mt-0.5 font-mono text-sm">{character.promptPath}</dd>
+								</div>
+								<div>
+									<dt class="text-xs text-text-subtle uppercase">Alive</dt>
+									<dd class="mt-0.5">{character.isAlive ? 'yes' : 'no'}</dd>
+								</div>
 							</dl>
 
 							{#key `${spritePromptPath}-${gender}`}
@@ -306,7 +308,7 @@
 						</div>
 					</Window>
 
-					<Window title="Vitals" class="m-0 w-full min-w-0 max-w-none">
+					<Window title="Vitals" class="m-0 w-full max-w-none min-w-0">
 						<dl class="grid gap-3 sm:grid-cols-2">
 							<div>
 								<dt class="text-xs text-text-subtle uppercase">HP</dt>
@@ -357,7 +359,7 @@
 						</div>
 					</Window>
 
-					<Window title="Stats (scales)" class="m-0 w-full min-w-0 max-w-none">
+					<Window title="Stats (scales)" class="m-0 w-full max-w-none min-w-0">
 						<div class="overflow-x-auto">
 							<table class="w-full text-left text-sm">
 								<thead class="border-b border-border-strong text-text-subtle">
@@ -384,11 +386,13 @@
 						</div>
 					</Window>
 
-					<Window title="Skills" class="m-0 w-full min-w-0 max-w-none">
+					<Window title="Skills" class="m-0 w-full max-w-none min-w-0">
 						{#if spec.skills?.length}
 							<ul class="space-y-2 text-sm">
 								{#each spec.skills as skill (skill)}
-									<li class="rounded-lg bg-surface-inset px-3 py-2 text-frame">{describeSkill(skill)}</li>
+									<li class="rounded-lg bg-surface-inset px-3 py-2 text-frame">
+										{describeSkill(skill)}
+									</li>
 								{/each}
 							</ul>
 						{:else}
@@ -397,13 +401,13 @@
 					</Window>
 
 					<section class="grid gap-4 lg:grid-cols-2">
-						<Window title="Class definition" class="m-0 w-full min-w-0 max-w-none">
+						<Window title="Class definition" class="m-0 w-full max-w-none min-w-0">
 							<pre
 								class="mt-3 max-h-80 overflow-auto rounded-lg bg-surface-code p-3 font-mono text-xs leading-relaxed text-frame">{formatJson(
 									definition
 								)}</pre>
 						</Window>
-						<Window title="Runtime spec" class="m-0 w-full min-w-0 max-w-none">
+						<Window title="Runtime spec" class="m-0 w-full max-w-none min-w-0">
 							<pre
 								class="mt-3 max-h-80 overflow-auto rounded-lg bg-surface-code p-3 font-mono text-xs leading-relaxed text-frame">{formatJson(
 									spec
@@ -415,4 +419,3 @@
 		</div>
 	</div>
 </main>
-

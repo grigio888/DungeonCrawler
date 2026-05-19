@@ -20,7 +20,9 @@
 	let createName = $state('Adventurer');
 	let createClassId = $state(classIds[0] ?? 'peasant');
 	let createLevel = $state(1);
-	let createGender = $state(/** @type {import('$lib/game/entities/character').Gender} */ (GENDER.FEMALE));
+	let createGender = $state(
+		/** @type {import('$lib/game/entities/character').Gender} */ (GENDER.FEMALE)
+	);
 
 	let deletingId = $state(/** @type {string | null} */ (null));
 
@@ -69,9 +71,11 @@
 			</p>
 		{/if}
 
-		<div class="grid items-start gap-8 lg:grid-cols-[minmax(17rem,280px)_minmax(14rem,220px)_minmax(0,1fr)]">
+		<div
+			class="grid items-start gap-8 lg:grid-cols-[minmax(17rem,280px)_minmax(14rem,220px)_minmax(0,1fr)]"
+		>
 			<aside class="flex flex-col gap-4">
-				<Window title="New character" class="m-0 w-full min-w-0 max-w-none">
+				<Window title="New character" class="m-0 w-full max-w-none min-w-0">
 					<form
 						method="POST"
 						action="?/create"
@@ -139,7 +143,7 @@
 				</p>
 			</aside>
 
-			<Window title="Saved" class="m-0 w-full min-w-0 max-w-none">
+			<Window title="Saved" class="m-0 w-full max-w-none min-w-0">
 				{#if data.characters.length === 0}
 					<p class="px-2 py-8 text-center text-sm text-text-subtle">No characters yet.</p>
 				{:else}
@@ -154,7 +158,8 @@
 								>
 									<p class="font-medium">{character.name}</p>
 									<p class="mt-0.5 text-xs text-text-subtle">
-										Lv.{character.level} {CLASSES[character.classId]?.name ?? character.classId}
+										Lv.{character.level}
+										{CLASSES[character.classId]?.name ?? character.classId}
 										· {character.gender}
 									</p>
 									<p class="mt-1 font-mono text-xs text-text-subtle">
@@ -167,10 +172,7 @@
 				{/if}
 			</Window>
 
-			<Window
-				title={data.selected?.name ?? 'Character'}
-				class="m-0 min-w-0 w-full max-w-none"
-			>
+			<Window title={data.selected?.name ?? 'Character'} class="m-0 w-full max-w-none min-w-0">
 				{#if data.selected}
 					{@const spec = data.selected}
 					<div class="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-3">
@@ -272,7 +274,9 @@
 						</div>
 
 						<div>
-							<h3 class="mb-2 text-xs font-medium tracking-wide text-text-subtle uppercase">Skills</h3>
+							<h3 class="mb-2 text-xs font-medium tracking-wide text-text-subtle uppercase">
+								Skills
+							</h3>
 							<ul class="space-y-1 text-sm">
 								{#each spec.skills as skill (skill)}
 									<li class="font-mono text-xs">{skill}</li>
@@ -284,7 +288,9 @@
 					</div>
 
 					<div class="border-t border-border pt-3">
-						<h3 class="mb-2 text-xs font-medium tracking-wide text-text-subtle uppercase">Full spec</h3>
+						<h3 class="mb-2 text-xs font-medium tracking-wide text-text-subtle uppercase">
+							Full spec
+						</h3>
 						<pre
 							class="max-h-80 overflow-auto rounded-lg border border-border bg-surface-code p-3 font-mono text-xs text-text-muted">{formatJson(
 								spec

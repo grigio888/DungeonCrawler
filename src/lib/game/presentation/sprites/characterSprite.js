@@ -1,6 +1,6 @@
 import { FACING_ORDER } from '$lib/core/constants/sprites.js';
 import { resolveFacing } from '$lib/core/helpers/sprites.js';
-import { pathMatchesClassSpriteFolder, pathMatchesSpriteKey } from './classSpritePath.js';
+import { pathMatchesClassSpriteFolder } from './classSpritePath.js';
 
 /** @typedef {import('$lib/core/enum/sprites.js').Facing} Facing */
 /** @typedef {import('$lib/core/enum/characters.js').Gender} Gender */

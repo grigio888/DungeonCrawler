@@ -19,7 +19,7 @@
 </script>
 
 <button
-	type={type}
+	{type}
 	aria-label={ariaLabel}
 	{onclick}
 	class="group relative cursor-pointer border-none bg-transparent p-0 {className}"

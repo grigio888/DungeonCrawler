@@ -52,8 +52,7 @@ export function specFromRow(plain) {
  * @param {import('$lib/game/entities/character/factory.js').CharacterSpec & { classHistory?: import('../classHistory.js').ClassHistory }} spec
  */
 export function rowFromSpec(spec) {
-	const classHistory =
-		spec.classHistory ?? createInitialClassHistory(spec.classId, spec.level);
+	const classHistory = spec.classHistory ?? createInitialClassHistory(spec.classId, spec.level);
 
 	return {
 		id: spec.id,

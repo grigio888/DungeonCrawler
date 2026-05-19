@@ -74,7 +74,7 @@
 			<aside
 				class="flex min-h-0 flex-col gap-4 lg:sticky lg:top-6 lg:z-10 lg:max-h-[calc(100vh-2rem)] lg:self-start lg:overflow-y-auto"
 			>
-				<Window title="Configure" class="m-0 w-full min-w-0 max-w-none shrink-0">
+				<Window title="Configure" class="m-0 w-full max-w-none min-w-0 shrink-0">
 					<div class="space-y-4">
 						<label class="block">
 							<span class="mb-1 block text-sm text-text-muted">Monster</span>
@@ -116,7 +116,7 @@
 					</dl>
 				</Window>
 				{#if spriteUrl}
-					<Window title="Sprite" class="m-0 w-full min-w-0 max-w-none shrink-0">
+					<Window title="Sprite" class="m-0 w-full max-w-none min-w-0 shrink-0">
 						<img
 							src={spriteUrl}
 							alt="{monster.name} sprite"
@@ -124,7 +124,7 @@
 						/>
 					</Window>
 				{:else}
-					<Window title="Sprite" class="m-0 w-full min-w-0 max-w-none shrink-0">
+					<Window title="Sprite" class="m-0 w-full max-w-none min-w-0 shrink-0">
 						<p class="text-center text-sm">No sprite found.</p>
 						<p class="mt-2 text-center text-xs">Add a PNG here, then refresh the page:</p>
 						<code class="mt-2 block text-center text-[10px]">{spritePathHint}</code>
@@ -133,7 +133,7 @@
 			</aside>
 
 			<div class="min-w-0 space-y-6">
-				<Window title="Identity" class="m-0 w-full min-w-0 max-w-none">
+				<Window title="Identity" class="m-0 w-full max-w-none min-w-0">
 					<dl class="grid gap-3 sm:grid-cols-2">
 						<div>
 							<dt class="text-xs text-text-subtle uppercase">Name</dt>
@@ -174,7 +174,7 @@
 					</dl>
 				</Window>
 
-				<Window title="Vitals" class="m-0 w-full min-w-0 max-w-none">
+				<Window title="Vitals" class="m-0 w-full max-w-none min-w-0">
 					<dl class="grid gap-3 sm:grid-cols-2">
 						<div>
 							<dt class="text-xs text-text-subtle uppercase">HP</dt>
@@ -193,7 +193,7 @@
 					</dl>
 				</Window>
 
-				<Window title="Stats (scales)" class="m-0 w-full min-w-0 max-w-none">
+				<Window title="Stats (scales)" class="m-0 w-full max-w-none min-w-0">
 					<div class="overflow-x-auto">
 						<table class="w-full text-left text-sm">
 							<thead class="border-b border-border-strong text-text-subtle">
@@ -220,11 +220,13 @@
 					</div>
 				</Window>
 
-				<Window title="Skills" class="m-0 w-full min-w-0 max-w-none">
+				<Window title="Skills" class="m-0 w-full max-w-none min-w-0">
 					{#if spec.skills?.length}
 						<ul class="space-y-2 text-sm">
 							{#each spec.skills as skill (skill)}
-								<li class="rounded-lg bg-surface-inset px-3 py-2 text-frame">{describeSkill(skill)}</li>
+								<li class="rounded-lg bg-surface-inset px-3 py-2 text-frame">
+									{describeSkill(skill)}
+								</li>
 							{/each}
 						</ul>
 					{:else}
@@ -233,13 +235,13 @@
 				</Window>
 
 				<section class="grid gap-4 lg:grid-cols-2">
-					<Window title="Template definition" class="m-0 w-full min-w-0 max-w-none">
+					<Window title="Template definition" class="m-0 w-full max-w-none min-w-0">
 						<pre
 							class="mt-3 max-h-80 overflow-auto rounded-lg bg-surface-code p-3 font-mono text-xs leading-relaxed text-frame">{formatJson(
 								definition
 							)}</pre>
 					</Window>
-					<Window title="Runtime spec" class="m-0 w-full min-w-0 max-w-none">
+					<Window title="Runtime spec" class="m-0 w-full max-w-none min-w-0">
 						<pre
 							class="mt-3 max-h-80 overflow-auto rounded-lg bg-surface-code p-3 font-mono text-xs leading-relaxed text-frame">{formatJson(
 								spec

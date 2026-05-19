@@ -9,7 +9,12 @@ import {
 
 describe('db/classHistory', () => {
 	it('normalizes valid entries', () => {
-		expect(normalizeClassHistory([['peasant', 9], ['swordsman', 15]])).toEqual([
+		expect(
+			normalizeClassHistory([
+				['peasant', 9],
+				['swordsman', 15]
+			])
+		).toEqual([
 			['peasant', 9],
 			['swordsman', 15]
 		]);

@@ -10,7 +10,11 @@ import {
 } from '$lib/game/progression';
 import CLASSES from '$lib/content/classes';
 import { GENDER } from '$lib/game/entities/character';
-import { createBaseCharacter, createCharacterSpec, isValidGender } from '$lib/game/entities/character/factory';
+import {
+	createBaseCharacter,
+	createCharacterSpec,
+	isValidGender
+} from '$lib/game/entities/character/factory';
 import BaseCharacter from '$lib/game/entities/character/controller';
 
 /**

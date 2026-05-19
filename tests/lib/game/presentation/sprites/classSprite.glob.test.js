@@ -27,16 +27,12 @@ describe('sprites/classSprite glob', () => {
 	});
 
 	it('matches paths with spaces and content/ prefix', () => {
-		const sample =
-			'/src/lib/content/classes/class 1/mage/sprites/female_idle_sw.png';
-		const encoded =
-			'/src/lib/content/classes/class%201/mage/sprites/female_idle_sw.png';
+		const sample = '/src/lib/content/classes/class 1/mage/sprites/female_idle_sw.png';
+		const encoded = '/src/lib/content/classes/class%201/mage/sprites/female_idle_sw.png';
 
 		expect(pathMatchesClassSpriteFolder(sample, 'class 1/mage')).toBe(true);
 		expect(pathMatchesClassSpriteFolder(encoded, 'class 1/mage')).toBe(true);
-		expect(
-			matchesClassSpritePath(sample, 'class 1/mage', 'female_idle_sw')
-		).toBe(true);
+		expect(matchesClassSpritePath(sample, 'class 1/mage', 'female_idle_sw')).toBe(true);
 	});
 
 	it('resolves mage sprite URL from glob entries', () => {

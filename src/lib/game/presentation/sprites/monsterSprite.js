@@ -39,7 +39,11 @@ export function listMonsterSpriteFiles(globEntries, monsterId) {
  * @param {string} monsterId
  * @param {string} [spriteName]
  */
-export function resolveMonsterSpriteUrl(globEntries, monsterId, spriteName = DEFAULT_MONSTER_SPRITE) {
+export function resolveMonsterSpriteUrl(
+	globEntries,
+	monsterId,
+	spriteName = DEFAULT_MONSTER_SPRITE
+) {
 	const prefix = `/content/monsters/${monsterId}/sprites/`;
 	let fallback = null;
 

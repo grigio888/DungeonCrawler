@@ -1,9 +1,7 @@
 import { buildStatsForLevel } from '$lib/game/progression/buildStats.js';
 import MONSTERS from './registry.js';
 
-import { MONSTER_KIND } from '$lib/core/enum/monsters.js';
-
-/** @typedef {typeof MONSTER_KIND[keyof typeof MONSTER_KIND]} MonsterKind */
+/** @typedef {import('$lib/core/enum/monsters.js').MonsterKind} MonsterKind */
 
 /** @typedef {import('./registry.js').default[string]} MonsterDefinition */
 

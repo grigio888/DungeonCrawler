@@ -16,7 +16,9 @@
 	const player = $derived(
 		data.playerSpec
 			? new BaseCharacter(
-					/** @type {import('$lib/game/entities/character/factory.js').CharacterSpec} */ (data.playerSpec)
+					/** @type {import('$lib/game/entities/character/factory.js').CharacterSpec} */ (
+						data.playerSpec
+					)
 				)
 			: null
 	);
@@ -44,7 +46,7 @@
 			</p>
 		</header>
 
-		<Window title="Opponent setup" class="m-0 mb-6 w-full min-w-0 max-w-none">
+		<Window title="Opponent setup" class="m-0 mb-6 w-full max-w-none min-w-0">
 			<div class="grid gap-4 sm:grid-cols-2">
 				<label class="block text-sm">
 					<span class="mb-1.5 block text-xs tracking-wide text-text-subtle uppercase">Monster</span>

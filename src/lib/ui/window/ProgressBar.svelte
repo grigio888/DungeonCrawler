@@ -33,9 +33,7 @@
 		return Math.max(0, Math.min(100, (current / max) * 100));
 	});
 
-	const caption = $derived(
-		showCaption && value != null && max != null ? `${value} / ${max}` : ''
-	);
+	const caption = $derived(showCaption && value != null && max != null ? `${value} / ${max}` : '');
 
 	const trackClass =
 		variant === 'pill'

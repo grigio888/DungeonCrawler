@@ -6,7 +6,6 @@ import {
 } from '$lib/game/progression/characterScales.js';
 
 import { DEFAULT_FACING } from '$lib/core/constants/sprites.js';
-import { GENDER } from '$lib/core/enum/characters.js';
 import { isValidGender, resolveGender } from '$lib/core/helpers/characters.js';
 
 /** @typedef {import('$lib/core/enum/characters.js').Gender} Gender */

@@ -188,14 +188,14 @@ export function estimateDamage({
 
 	const statFactor = 1 + multiplicator * 0.5;
 
-    let finalDamage = Math.max(1, Math.floor(initialDamage * statFactor));
+	let finalDamage = Math.max(1, Math.floor(initialDamage * statFactor));
 
-    if (isRolling && isCritical) {
-        finalDamage *= 2;
-    }
+	if (isRolling && isCritical) {
+		finalDamage *= 2;
+	}
 
-    return {
-        damage: finalDamage,
-        isCritical: isRolling && isCritical
-    };
+	return {
+		damage: finalDamage,
+		isCritical: isRolling && isCritical
+	};
 }

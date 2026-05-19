@@ -181,12 +181,12 @@
 	});
 </script>
 
-<Window title={environment.name} class="m-0 flex min-h-[32rem] w-full min-w-0 max-w-none flex-col">
+<Window title={environment.name} class="m-0 flex min-h-[32rem] w-full max-w-none min-w-0 flex-col">
 	<p class="mb-3 text-sm text-text-muted">{environment.description}</p>
 
 	<div class="grid flex-1 gap-3 lg:grid-cols-[1fr_auto_1fr] lg:items-end">
 		{#if player && playerView && battle}
-			<Window title="Player" class="m-0 w-full min-w-0 max-w-none">
+			<Window title="Player" class="m-0 w-full max-w-none min-w-0">
 				<div class="mb-3 flex items-start justify-between gap-3">
 					<div>
 						<p class="text-xs tracking-wide text-title-mid uppercase">Player</p>
@@ -198,7 +198,7 @@
 					>
 				</div>
 
-				<div class="relative mx-auto mb-3 flex min-h-28 max-h-28 items-end justify-center">
+				<div class="relative mx-auto mb-3 flex max-h-28 min-h-28 items-end justify-center">
 					{#if playerDamagePopup}
 						{#key playerDamagePopup.id}
 							<BattleDamagePopup
@@ -209,11 +209,7 @@
 						{/key}
 					{/if}
 					{#if playerSpriteUrl}
-						<img
-							src={playerSpriteUrl}
-							alt={playerView.name}
-							class="image-pixelated max-h-28"
-						/>
+						<img src={playerSpriteUrl} alt={playerView.name} class="image-pixelated max-h-28" />
 					{/if}
 				</div>
 
@@ -280,8 +276,7 @@
 			{#if battle?.lastAction && battle.lastAction.damage > 0}
 				<p class="text-sm text-text-muted">
 					{#if battle.lastAction.isCritical}
-						<span class="font-semibold text-red-400">Critical!</span><br>
-						{' '}
+						<span class="font-semibold text-red-400">Critical!</span><br />
 					{/if}
 					{battle.lastAction.damage} damage · {describeSkill(
 						battle.lastAction.skillId ?? '0001_attack'
@@ -294,7 +289,7 @@
 			{/if}
 		</div>
 
-		<Window title="Opponent" class="m-0 w-full min-w-0 max-w-none">
+		<Window title="Opponent" class="m-0 w-full max-w-none min-w-0">
 			<div class="mb-3 flex items-start justify-between gap-3">
 				<div>
 					<p class="text-xs tracking-wide text-gold-dim uppercase">Opponent</p>
@@ -306,7 +301,7 @@
 				>
 			</div>
 
-			<div class="relative mx-auto mb-3 flex min-h-28 max-h-28 items-end justify-center">
+			<div class="relative mx-auto mb-3 flex max-h-28 min-h-28 items-end justify-center">
 				{#if opponentDamagePopup}
 					{#key opponentDamagePopup.id}
 						<BattleDamagePopup
@@ -317,11 +312,7 @@
 					{/key}
 				{/if}
 				{#if opponentSpriteUrl}
-					<img
-						src={opponentSpriteUrl}
-						alt={opponentView.name}
-						class="image-pixelated max-h-28"
-					/>
+					<img src={opponentSpriteUrl} alt={opponentView.name} class="image-pixelated max-h-28" />
 				{/if}
 			</div>
 
@@ -371,13 +362,13 @@
 				{#if player && isCharacter(player)}
 					<div>
 						<dt class="uppercase">Weapon</dt>
-					<dd class="font-mono text-frame">
-						{player.getEquippedWeapon()?.name ?? 'Unarmed'}
-					</dd>
-				</div>
-				<div>
-					<dt class="uppercase">Est. damage</dt>
-					<dd class="font-mono text-frame">{player.estimateDamage('0001_attack').damage}</dd>
+						<dd class="font-mono text-frame">
+							{player.getEquippedWeapon()?.name ?? 'Unarmed'}
+						</dd>
+					</div>
+					<div>
+						<dt class="uppercase">Est. damage</dt>
+						<dd class="font-mono text-frame">{player.estimateDamage('0001_attack').damage}</dd>
 					</div>
 				{/if}
 				<div>
