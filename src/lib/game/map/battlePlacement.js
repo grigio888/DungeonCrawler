@@ -2,18 +2,20 @@
 /** @typedef {import('./types.js').MapCoord} MapCoord */
 
 /**
- * Default tile positions on the common-ground battle grid.
- * Player on the left row; opponent on the right row (same center line).
+ * Default tile positions on the battle arena.
+ * Same center column (e.g. 6-3 / 6-8); opponent north, player south.
  *
  * @param {GeneratedMap} map
  * @returns {{ player: MapCoord, opponent: MapCoord }}
  */
 export function getBattleCombatantCoords(map) {
 	const { battleBounds } = map;
-	const row = battleBounds.y + Math.floor(battleBounds.height / 2);
+	const column = battleBounds.x + Math.floor(battleBounds.width / 2);
+	const northRow = battleBounds.y;
+	const southRow = battleBounds.y + battleBounds.height - 1;
 
 	return {
-		player: { x: battleBounds.x + 1, y: row },
-		opponent: { x: battleBounds.x + battleBounds.width - 2, y: row }
+		opponent: { x: column, y: northRow },
+		player: { x: column, y: southRow }
 	};
 }

@@ -4,15 +4,16 @@ import { createMapSeed, generateMap } from '$lib/game/map';
 import { getBattleCombatantCoords } from '$lib/game/map/battlePlacement.js';
 
 describe('game/map/battlePlacement', () => {
-	it('places player on the left and opponent on the right of common ground', () => {
+	it('places opponent on the north row and player on the south row of the arena', () => {
 		const map = generateMap({ seed: createMapSeed(42) });
 		const { player, opponent } = getBattleCombatantCoords(map);
 		const { battleBounds } = map;
+		const column = battleBounds.x + Math.floor(battleBounds.width / 2);
 
-		expect(player.x).toBe(battleBounds.x + 1);
-		expect(opponent.x).toBe(battleBounds.x + battleBounds.width - 2);
-		expect(player.y).toBe(opponent.y);
-		expect(player.y).toBeGreaterThanOrEqual(battleBounds.y);
-		expect(player.y).toBeLessThan(battleBounds.y + battleBounds.height);
+		expect(opponent).toEqual({ x: column, y: battleBounds.y });
+		expect(player).toEqual({
+			x: column,
+			y: battleBounds.y + battleBounds.height - 1
+		});
 	});
 });
