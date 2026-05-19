@@ -1,5 +1,5 @@
 <script>
-	import { SCALES } from '$lib/enums';
+	import { SCALES } from '$lib/core/enum/stats.js';
 	import {
 		ALLOCATABLE_SCALES,
 		BASE_CHARACTER_STAT_VALUE,
@@ -9,12 +9,13 @@
 		getExpectedCharacterStatTotal,
 		getPointsPerLevel,
 		getTotalStatPoints
-	} from '$lib/progression';
-	import CLASSES, { resolvePromptPath } from '$lib/classes';
-	import ClassSpritePreview from '$lib/components/debug/ClassSpritePreview.svelte';
+	} from '$lib/game/progression';
+	import CLASSES, { resolvePromptPath } from '$lib/content/classes';
+	import ClassSpritePreview from '$lib/ui/debug/ClassSpritePreview.svelte';
 	import { untrack } from 'svelte';
-	import { GENDER, GENDER_VALUES, createCharacterSpec } from '$lib/characters';
-	import SkillFactory from '$lib/skills/factory';
+	import { GENDER, GENDER_VALUES, createCharacterSpec } from '$lib/game/entities/character';
+	import SkillFactory from '$lib/content/skills/factory';
+	import Window from '$lib/ui/window/Window.svelte';
 
 	const PREVIEW_ID = 'debug-character-preview';
 
@@ -24,9 +25,9 @@
 	let classId = $state(classIds[0] ?? 'peasant');
 	let level = $state(1);
 	let characterName = $state('Adventurer');
-	let gender = $state(/** @type {import('$lib/characters').Gender} */ (GENDER.FEMALE));
+	let gender = $state(/** @type {import('$lib/game/entities/character').Gender} */ (GENDER.FEMALE));
 
-	/** @type {import('$lib/characters/factory.js').CharacterSpec | null} */
+	/** @type {import('$lib/game/entities/character/factory.js').CharacterSpec | null} */
 	let previewSpec = $state(null);
 
 	$effect(() => {
@@ -165,17 +166,13 @@
 			<aside
 				class="flex flex-col gap-4 lg:sticky lg:top-6 lg:z-10 lg:max-h-[calc(100vh-2rem)] lg:self-start lg:overflow-y-auto"
 			>
-				<section
-					class="rounded-xl border border-emerald-500/20 bg-zinc-900/80 p-4 shadow-lg shadow-black/20"
-				>
-					<h2 class="text-sm font-medium tracking-wide text-emerald-400/90 uppercase">Configure</h2>
-
-					<div class="mt-4 space-y-4">
+				<Window title="Configure" class="m-0 w-full min-w-0 max-w-none">
+					<div class="space-y-4">
 						<label class="block">
 							<span class="mb-1 block text-sm text-zinc-400">Class</span>
 							<select
 								bind:value={classId}
-								class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100"
+								class="w-full rounded-lg border border-zinc-700 bg-white px-3 py-2 text-zinc-900"
 							>
 								{#each classIds as id (id)}
 									<option value={id}>{CLASSES[id].name} ({id})</option>
@@ -190,7 +187,7 @@
 								min="1"
 								max="99"
 								bind:value={level}
-								class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100"
+								class="w-full rounded-lg border border-zinc-700 bg-white px-3 py-2 text-zinc-900"
 							/>
 						</label>
 
@@ -199,7 +196,7 @@
 							<input
 								type="text"
 								bind:value={characterName}
-								class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100"
+								class="w-full rounded-lg border border-zinc-700 bg-white px-3 py-2 text-zinc-900"
 							/>
 						</label>
 
@@ -207,7 +204,7 @@
 							<span class="mb-1 block text-sm text-zinc-400">Gender</span>
 							<select
 								bind:value={gender}
-								class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100"
+								class="w-full rounded-lg border border-zinc-700 bg-white px-3 py-2 text-zinc-900"
 							>
 								{#each GENDER_VALUES as value (value)}
 									<option {value}>{value}</option>
@@ -253,15 +250,13 @@
 							</dd>
 						</div>
 					</dl>
-				</section>
+				</Window>
 			</aside>
 
 			<div class="min-w-0 space-y-6">
 				{#if character && spec}
-					<section class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-						<h2 class="text-lg font-medium text-emerald-300/90">Identity</h2>
-
-						<div class="mt-4 grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,26rem)]">
+					<Window title="Identity" class="m-0 w-full min-w-0 max-w-none">
+						<div class="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,26rem)]">
 							<dl class="grid gap-3 sm:grid-cols-2">
 							<div>
 								<dt class="text-xs text-zinc-500 uppercase">Name</dt>
@@ -309,11 +304,10 @@
 								<ClassSpritePreview promptPath={spritePromptPath} {gender} />
 							{/key}
 						</div>
-					</section>
+					</Window>
 
-					<section class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-						<h2 class="text-lg font-medium text-emerald-300/90">Vitals</h2>
-						<dl class="mt-4 grid gap-3 sm:grid-cols-2">
+					<Window title="Vitals" class="m-0 w-full min-w-0 max-w-none">
+						<dl class="grid gap-3 sm:grid-cols-2">
 							<div>
 								<dt class="text-xs text-zinc-500 uppercase">HP</dt>
 								<dd class="mt-0.5 font-mono">{character.hp} / {character.maxHp}</dd>
@@ -324,7 +318,7 @@
 							</div>
 						</dl>
 
-						<div class="mt-5 overflow-x-auto">
+						<div class="mt-3 overflow-x-auto">
 							<table class="w-full text-left text-sm">
 								<thead class="border-b border-zinc-700 text-zinc-500">
 									<tr>
@@ -361,11 +355,10 @@
 								</tbody>
 							</table>
 						</div>
-					</section>
+					</Window>
 
-					<section class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-						<h2 class="text-lg font-medium text-emerald-300/90">Stats (scales)</h2>
-						<div class="mt-4 overflow-x-auto">
+					<Window title="Stats (scales)" class="m-0 w-full min-w-0 max-w-none">
+						<div class="overflow-x-auto">
 							<table class="w-full text-left text-sm">
 								<thead class="border-b border-zinc-700 text-zinc-500">
 									<tr>
@@ -389,36 +382,33 @@
 								</tbody>
 							</table>
 						</div>
-					</section>
+					</Window>
 
-					<section class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-						<h2 class="text-lg font-medium text-emerald-300/90">Skills</h2>
+					<Window title="Skills" class="m-0 w-full min-w-0 max-w-none">
 						{#if spec.skills?.length}
-							<ul class="mt-4 space-y-2 text-sm text-zinc-300">
+							<ul class="space-y-2 text-sm">
 								{#each spec.skills as skill (skill)}
-									<li class="rounded-lg bg-zinc-950/80 px-3 py-2">{describeSkill(skill)}</li>
+									<li class="rounded-lg bg-zinc-950/80 px-3 py-2 text-zinc-300">{describeSkill(skill)}</li>
 								{/each}
 							</ul>
 						{:else}
 							<p class="mt-4 text-sm text-zinc-500">No skills.</p>
 						{/if}
-					</section>
+					</Window>
 
 					<section class="grid gap-4 lg:grid-cols-2">
-						<div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-							<h2 class="text-sm font-medium text-zinc-400">Class definition</h2>
+						<Window title="Class definition" class="m-0 w-full min-w-0 max-w-none">
 							<pre
 								class="mt-3 max-h-80 overflow-auto rounded-lg bg-zinc-950 p-3 font-mono text-xs leading-relaxed text-zinc-300">{formatJson(
 									definition
 								)}</pre>
-						</div>
-						<div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-							<h2 class="text-sm font-medium text-zinc-400">Runtime spec</h2>
+						</Window>
+						<Window title="Runtime spec" class="m-0 w-full min-w-0 max-w-none">
 							<pre
 								class="mt-3 max-h-80 overflow-auto rounded-lg bg-zinc-950 p-3 font-mono text-xs leading-relaxed text-zinc-300">{formatJson(
 									spec
 								)}</pre>
-						</div>
+						</Window>
 					</section>
 				{/if}
 			</div>

@@ -1,14 +1,16 @@
 <script>
-	import { SCALES } from '$lib/enums';
-	import { getPointsPerLevel, getTotalStatPoints } from '$lib/progression';
-	import MONSTERS, { BaseMonster } from '$lib/monsters';
-	import { getMonsterSpritePath, resolveMonsterSpriteUrl } from '$lib/sprites';
-	import SkillFactory from '$lib/skills/factory';
+	import { SCALES } from '$lib/core/enum/stats.js';
+	import { getPointsPerLevel, getTotalStatPoints } from '$lib/game/progression';
+	import MONSTERS from '$lib/content/monsters';
+	import { BaseMonster } from '$lib/game/entities/monster';
+	import { getMonsterSpritePath, resolveMonsterSpriteUrl } from '$lib/game/presentation/sprites';
+	import SkillFactory from '$lib/content/skills/factory';
+	import Window from '$lib/ui/window/Window.svelte';
 
 	const monsterIds = Object.keys(MONSTERS).sort();
 	const scaleKeys = Object.values(SCALES);
 
-	const sprites = import.meta.glob('$lib/monsters/*/sprites/*.{png,webp,gif}', {
+	const sprites = import.meta.glob('$lib/content/monsters/*/sprites/*.{png,webp,gif}', {
 		eager: true,
 		query: '?url',
 		import: 'default'
@@ -72,17 +74,13 @@
 			<aside
 				class="flex flex-col gap-4 lg:sticky lg:top-6 lg:z-10 lg:max-h-[calc(100vh-2rem)] lg:self-start lg:overflow-y-auto"
 			>
-				<section
-					class="rounded-xl border border-amber-500/20 bg-zinc-900/80 p-4 shadow-lg shadow-black/20"
-				>
-					<h2 class="text-sm font-medium tracking-wide text-amber-400/90 uppercase">Configure</h2>
-
-					<div class="mt-4 space-y-4">
+				<Window title="Configure" class="m-0 w-full min-w-0 max-w-none">
+					<div class="space-y-4">
 						<label class="block">
 							<span class="mb-1 block text-sm text-zinc-400">Monster</span>
 							<select
 								bind:value={monsterId}
-								class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100"
+								class="w-full rounded-lg border border-zinc-700 bg-white px-3 py-2 text-zinc-900"
 							>
 								{#each monsterIds as id (id)}
 									<option value={id}>{MONSTERS[id].name} ({id})</option>
@@ -97,7 +95,7 @@
 								min="1"
 								max="99"
 								bind:value={level}
-								class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100"
+								class="w-full rounded-lg border border-zinc-700 bg-white px-3 py-2 text-zinc-900"
 							/>
 						</label>
 					</div>
@@ -116,31 +114,27 @@
 							<dd class="font-mono">{allocatedStatTotal}</dd>
 						</div>
 					</dl>
-				</section>
+				</Window>
 				{#if spriteUrl}
-					<div class="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/80 p-4">
-						<p class="mb-3 text-xs tracking-wide text-zinc-500 uppercase">Sprite</p>
+					<Window title="Sprite" class="m-0 w-full min-w-0 max-w-none">
 						<img
 							src={spriteUrl}
 							alt="{monster.name} sprite"
 							class="image-pixelated mx-auto max-h-48 w-auto"
 						/>
-					</div>
+					</Window>
 				{:else}
-					<div
-						class="rounded-xl border border-dashed border-zinc-800 bg-zinc-900/40 p-6 text-center text-sm text-zinc-500"
-					>
-						<p>No sprite found.</p>
-						<p class="mt-2 text-xs">Add a PNG here, then refresh the page:</p>
-						<code class="mt-2 block text-[10px] text-zinc-400">{spritePathHint}</code>
-					</div>
+					<Window title="Sprite" class="m-0 w-full min-w-0 max-w-none">
+						<p class="text-center text-sm">No sprite found.</p>
+						<p class="mt-2 text-center text-xs">Add a PNG here, then refresh the page:</p>
+						<code class="mt-2 block text-center text-[10px]">{spritePathHint}</code>
+					</Window>
 				{/if}
 			</aside>
 
 			<div class="min-w-0 space-y-6">
-				<section class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-					<h2 class="text-lg font-medium text-amber-300/90">Identity</h2>
-					<dl class="mt-4 grid gap-3 sm:grid-cols-2">
+				<Window title="Identity" class="m-0 w-full min-w-0 max-w-none">
+					<dl class="grid gap-3 sm:grid-cols-2">
 						<div>
 							<dt class="text-xs text-zinc-500 uppercase">Name</dt>
 							<dd class="mt-0.5 font-medium">{monster.name}</dd>
@@ -178,11 +172,10 @@
 							<dd class="mt-0.5">{monster.isAlive ? 'yes' : 'no'}</dd>
 						</div>
 					</dl>
-				</section>
+				</Window>
 
-				<section class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-					<h2 class="text-lg font-medium text-amber-300/90">Vitals</h2>
-					<dl class="mt-4 grid gap-3 sm:grid-cols-2">
+				<Window title="Vitals" class="m-0 w-full min-w-0 max-w-none">
+					<dl class="grid gap-3 sm:grid-cols-2">
 						<div>
 							<dt class="text-xs text-zinc-500 uppercase">HP</dt>
 							<dd class="mt-0.5 font-mono">{monster.hp} / {monster.maxHp}</dd>
@@ -198,11 +191,10 @@
 							</dd>
 						</div>
 					</dl>
-				</section>
+				</Window>
 
-				<section class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-					<h2 class="text-lg font-medium text-amber-300/90">Stats (scales)</h2>
-					<div class="mt-4 overflow-x-auto">
+				<Window title="Stats (scales)" class="m-0 w-full min-w-0 max-w-none">
+					<div class="overflow-x-auto">
 						<table class="w-full text-left text-sm">
 							<thead class="border-b border-zinc-700 text-zinc-500">
 								<tr>
@@ -226,36 +218,33 @@
 							</tbody>
 						</table>
 					</div>
-				</section>
+				</Window>
 
-				<section class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-					<h2 class="text-lg font-medium text-amber-300/90">Skills</h2>
+				<Window title="Skills" class="m-0 w-full min-w-0 max-w-none">
 					{#if spec.skills?.length}
-						<ul class="mt-4 space-y-2 text-sm text-zinc-300">
+						<ul class="space-y-2 text-sm">
 							{#each spec.skills as skill (skill)}
-								<li class="rounded-lg bg-zinc-950/80 px-3 py-2">{describeSkill(skill)}</li>
+								<li class="rounded-lg bg-zinc-950/80 px-3 py-2 text-zinc-300">{describeSkill(skill)}</li>
 							{/each}
 						</ul>
 					{:else}
 						<p class="mt-4 text-sm text-zinc-500">No skills.</p>
 					{/if}
-				</section>
+				</Window>
 
 				<section class="grid gap-4 lg:grid-cols-2">
-					<div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-						<h2 class="text-sm font-medium text-zinc-400">Template definition</h2>
+					<Window title="Template definition" class="m-0 w-full min-w-0 max-w-none">
 						<pre
 							class="mt-3 max-h-80 overflow-auto rounded-lg bg-zinc-950 p-3 font-mono text-xs leading-relaxed text-zinc-300">{formatJson(
 								definition
 							)}</pre>
-					</div>
-					<div class="rounded-xl border border-zinc-800 bg-zinc-900/60 p-5">
-						<h2 class="text-sm font-medium text-zinc-400">Runtime spec</h2>
+					</Window>
+					<Window title="Runtime spec" class="m-0 w-full min-w-0 max-w-none">
 						<pre
 							class="mt-3 max-h-80 overflow-auto rounded-lg bg-zinc-950 p-3 font-mono text-xs leading-relaxed text-zinc-300">{formatJson(
 								spec
 							)}</pre>
-					</div>
+					</Window>
 				</section>
 			</div>
 		</div>

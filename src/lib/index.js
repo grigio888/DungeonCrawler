@@ -1,5 +1,4 @@
-export * as classes from '$lib/classes/index.js';
-export * as characters from '$lib/characters/index.js';
-export * as monsters from '$lib/monsters/index.js';
-export * as skills from '$lib/skills/index.js';
-export * as scenarios from '$lib/scenarios/index.js';
+export * as core from '$lib/core/index.js';
+export * as content from '$lib/content/index.js';
+export * as game from '$lib/game/index.js';
+export * as ui from '$lib/ui/index.js';

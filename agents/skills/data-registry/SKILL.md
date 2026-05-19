@@ -23,9 +23,9 @@ Read [agents/guidelines/01-data-registries.md](../../guidelines/01-data-registri
 
 - [ ] Registry key === `definition.id`
 - [ ] `const` assertion on registry object
-- [ ] Enums from `$lib/enums` / domain `enums.js` (not string literals)
+- [ ] Enums from `$lib/core/enum/` by domain (not string literals)
 - [ ] No per-entity test files added
 
 ## Reference
 
-`src/lib/items/weapons/` — copy this layout for new domains.
+`src/lib/content/items/weapons/` — copy this layout for new domains.

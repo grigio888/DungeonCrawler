@@ -1,15 +1,17 @@
 <script>
 	import { resolve } from '$app/paths';
 	import { enhance } from '$app/forms';
-	import CLASSES, { resolvePromptPath } from '$lib/classes';
-	import { buildCharacterSpriteKey, resolveClassSpriteUrl } from '$lib/sprites';
-	import { GENDER, GENDER_VALUES } from '$lib/characters';
+	import CLASSES, { resolvePromptPath } from '$lib/content/classes';
+	import { buildCharacterSpriteKey, resolveClassSpriteUrl } from '$lib/game/presentation/sprites';
+	import { GENDER, GENDER_VALUES } from '$lib/game/entities/character';
+	import Window from '$lib/ui/window/Window.svelte';
+	import ButtonRetangular from '$lib/ui/window/ButtonRetangular.svelte';
 
 	let { data, form } = $props();
 
 	const classIds = Object.keys(CLASSES).sort();
 
-	const sprites = import.meta.glob('$lib/classes/**/sprites/*.{png,webp,gif}', {
+	const sprites = import.meta.glob('$lib/content/classes/**/sprites/*.{png,webp,gif}', {
 		eager: true,
 		query: '?url',
 		import: 'default'
@@ -18,7 +20,7 @@
 	let createName = $state('Adventurer');
 	let createClassId = $state(classIds[0] ?? 'peasant');
 	let createLevel = $state(1);
-	let createGender = $state(/** @type {import('$lib/characters').Gender} */ (GENDER.FEMALE));
+	let createGender = $state(/** @type {import('$lib/game/entities/character').Gender} */ (GENDER.FEMALE));
 
 	let deletingId = $state(/** @type {string | null} */ (null));
 
@@ -69,15 +71,11 @@
 
 		<div class="grid items-start gap-8 lg:grid-cols-[minmax(17rem,280px)_minmax(14rem,220px)_minmax(0,1fr)]">
 			<aside class="flex flex-col gap-4">
-				<section
-					class="rounded-xl border border-sky-500/20 bg-zinc-900/80 p-4 shadow-lg shadow-black/20"
-				>
-					<h2 class="text-sm font-medium tracking-wide text-sky-400/90 uppercase">New character</h2>
-
+				<Window title="New character" class="m-0 w-full min-w-0 max-w-none">
 					<form
 						method="POST"
 						action="?/create"
-						class="mt-4 space-y-4"
+						class="space-y-4"
 						use:enhance={() => {
 							return async ({ update }) => {
 								await update();
@@ -90,7 +88,7 @@
 								type="text"
 								name="name"
 								bind:value={createName}
-								class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100"
+								class="w-full rounded-lg border border-zinc-700 bg-white px-3 py-2 text-zinc-900"
 							/>
 						</label>
 
@@ -99,7 +97,7 @@
 							<select
 								name="classId"
 								bind:value={createClassId}
-								class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100"
+								class="w-full rounded-lg border border-zinc-700 bg-white px-3 py-2 text-zinc-900"
 							>
 								{#each classIds as id (id)}
 									<option value={id}>{CLASSES[id].name} ({id})</option>
@@ -115,7 +113,7 @@
 								min="1"
 								max="99"
 								bind:value={createLevel}
-								class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100"
+								class="w-full rounded-lg border border-zinc-700 bg-white px-3 py-2 text-zinc-900"
 							/>
 						</label>
 
@@ -124,7 +122,7 @@
 							<select
 								name="gender"
 								bind:value={createGender}
-								class="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-zinc-100"
+								class="w-full rounded-lg border border-zinc-700 bg-white px-3 py-2 text-zinc-900"
 							>
 								{#each GENDER_VALUES as value (value)}
 									<option {value}>{value}</option>
@@ -132,27 +130,18 @@
 							</select>
 						</label>
 
-						<button
-							type="submit"
-							class="w-full rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-sky-500"
-						>
-							Create & save
-						</button>
+						<ButtonRetangular type="submit" label="create & save" class="w-full" />
 					</form>
-				</section>
+				</Window>
 
 				<p class="text-xs text-zinc-500">
 					{data.characters.length} character{data.characters.length === 1 ? '' : 's'} saved.
 				</p>
 			</aside>
 
-			<section class="rounded-xl border border-zinc-800 bg-zinc-900/60">
-				<h2 class="border-b border-zinc-800 px-4 py-3 text-sm font-medium tracking-wide text-zinc-400 uppercase">
-					Saved
-				</h2>
-
+			<Window title="Saved" class="m-0 w-full min-w-0 max-w-none">
 				{#if data.characters.length === 0}
-					<p class="px-4 py-8 text-center text-sm text-zinc-500">No characters yet.</p>
+					<p class="px-2 py-8 text-center text-sm text-zinc-500">No characters yet.</p>
 				{:else}
 					<ul class="max-h-[min(32rem,calc(100vh-12rem))] divide-y divide-zinc-800 overflow-y-auto">
 						{#each data.characters as character (character.id)}
@@ -176,14 +165,16 @@
 						{/each}
 					</ul>
 				{/if}
-			</section>
+			</Window>
 
-			<section class="min-w-0 rounded-xl border border-zinc-800 bg-zinc-900/60">
+			<Window
+				title={data.selected?.name ?? 'Character'}
+				class="m-0 min-w-0 w-full max-w-none"
+			>
 				{#if data.selected}
 					{@const spec = data.selected}
-					<div class="flex flex-wrap items-start justify-between gap-4 border-b border-zinc-800 px-4 py-4">
+					<div class="flex flex-wrap items-start justify-between gap-4 border-b border-zinc-200 pb-3">
 						<div class="min-w-0">
-							<h2 class="text-xl font-semibold">{spec.name}</h2>
 							<p class="mt-1 text-sm text-zinc-400">
 								{CLASSES[spec.classId]?.name ?? spec.classId} · Lv.{spec.level} · {spec.gender}
 							</p>
@@ -202,22 +193,20 @@
 							}}
 						>
 							<input type="hidden" name="id" value={spec.id} />
-							<button
+							<ButtonRetangular
 								type="submit"
 								disabled={deletingId === spec.id}
-								class="rounded-lg border border-red-500/40 bg-red-950/30 px-3 py-2 text-sm text-red-200 transition hover:bg-red-950/60 disabled:opacity-50"
+								label={deletingId === spec.id ? 'deleting…' : 'delete'}
 								onclick={(event) => {
 									if (!confirm(`Delete ${spec.name}? This cannot be undone.`)) {
 										event.preventDefault();
 									}
 								}}
-							>
-								{deletingId === spec.id ? 'Deleting…' : 'Delete'}
-							</button>
+							/>
 						</form>
 					</div>
 
-					<div class="border-b border-zinc-800 p-4">
+					<div class="border-b border-zinc-200 py-3">
 						<p class="mb-3 text-xs font-medium tracking-wide text-zinc-500 uppercase">Sprite</p>
 
 						<div
@@ -240,7 +229,7 @@
 						</div>
 					</div>
 
-					<div class="grid gap-6 p-4 sm:grid-cols-2">
+					<div class="grid gap-6 py-3 sm:grid-cols-2">
 						<dl class="space-y-2 text-sm">
 							<div class="flex justify-between gap-2">
 								<dt class="text-zinc-400">HP</dt>
@@ -284,7 +273,7 @@
 
 						<div>
 							<h3 class="mb-2 text-xs font-medium tracking-wide text-zinc-500 uppercase">Skills</h3>
-							<ul class="space-y-1 text-sm text-zinc-300">
+							<ul class="space-y-1 text-sm">
 								{#each spec.skills as skill (skill)}
 									<li class="font-mono text-xs">{skill}</li>
 								{:else}
@@ -294,7 +283,7 @@
 						</div>
 					</div>
 
-					<div class="border-t border-zinc-800 p-4">
+					<div class="border-t border-zinc-200 pt-3">
 						<h3 class="mb-2 text-xs font-medium tracking-wide text-zinc-500 uppercase">Full spec</h3>
 						<pre
 							class="max-h-80 overflow-auto rounded-lg border border-zinc-800 bg-zinc-950 p-3 font-mono text-xs text-zinc-400">{formatJson(
@@ -302,15 +291,15 @@
 							)}</pre>
 					</div>
 				{:else if data.selectedId}
-					<p class="px-4 py-12 text-center text-sm text-zinc-500">
+					<p class="py-12 text-center text-sm text-zinc-500">
 						Character not found. It may have been deleted.
 					</p>
 				{:else}
-					<p class="px-4 py-12 text-center text-sm text-zinc-500">
+					<p class="py-12 text-center text-sm text-zinc-500">
 						Select a character from the list, or create a new one.
 					</p>
 				{/if}
-			</section>
+			</Window>
 		</div>
 	</div>
 </main>

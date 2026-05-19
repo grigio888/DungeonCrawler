@@ -28,4 +28,4 @@ npm run check      # svelte-check + JS types
 
 ## Reference implementation
 
-Weapons are the template: `src/lib/items/weapons/` and `tests/lib/items/weapons/`.
+Weapons are the template: `src/lib/content/items/weapons/` and `tests/lib/content/items/weapons/`.

@@ -5,7 +5,7 @@ Factories turn registry IDs into objects with getters (no mutation of definition
 ## Constructor pattern
 
 ```js
-import REGISTRY from '$lib/items/weapons';
+import REGISTRY from '$lib/content/items/weapons';
 
 /**
  * @param {WeaponId | ''} [id]

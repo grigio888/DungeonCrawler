@@ -6,8 +6,8 @@ import {
 	getCharacterById,
 	listCharacters
 } from '$db/repositories/characterRepository.js';
-import CLASSES from '$lib/classes';
-import { isValidGender } from '$lib/characters';
+import CLASSES from '$lib/content/classes';
+import { isValidGender } from '$lib/game/entities/character';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ url }) {

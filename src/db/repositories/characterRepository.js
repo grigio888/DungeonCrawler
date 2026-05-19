@@ -1,10 +1,10 @@
-import { getClassDefinition } from '$lib/classes';
+import { getClassDefinition } from '$lib/content/classes';
 import {
 	createCharacterSpec,
 	createEmptyEquipment,
 	resolveGender
-} from '$lib/characters';
-import { DEFAULT_FACING } from '$lib/sprites';
+} from '$lib/game/entities/character';
+import { DEFAULT_FACING } from '$lib/game/presentation/sprites';
 
 import {
 	createInitialClassHistory,
@@ -22,7 +22,7 @@ function toPlain(row) {
 
 /**
  * @param {Record<string, unknown>} plain
- * @returns {import('$lib/characters/factory.js').CharacterSpec & Record<string, unknown>}
+ * @returns {import('$lib/game/entities/character/factory.js').CharacterSpec & Record<string, unknown>}
  */
 export function specFromRow(plain) {
 	const classHistory = normalizeClassHistory(plain.classes);
@@ -49,7 +49,7 @@ export function specFromRow(plain) {
 }
 
 /**
- * @param {import('$lib/characters/factory.js').CharacterSpec & { classHistory?: import('../classHistory.js').ClassHistory }} spec
+ * @param {import('$lib/game/entities/character/factory.js').CharacterSpec & { classHistory?: import('../classHistory.js').ClassHistory }} spec
  */
 export function rowFromSpec(spec) {
 	const classHistory =
@@ -101,7 +101,7 @@ export async function listCharacters() {
 
 /**
  * @param {string} id
- * @returns {Promise<(import('$lib/characters/factory.js').CharacterSpec & Record<string, unknown>) | null>}
+ * @returns {Promise<(import('$lib/game/entities/character/factory.js').CharacterSpec & Record<string, unknown>) | null>}
  */
 export async function getCharacterById(id) {
 	const { Character } = getModels();
@@ -111,7 +111,7 @@ export async function getCharacterById(id) {
 }
 
 /**
- * @param {import('$lib/characters/factory.js').BaseCharacterInput & { classId?: string, level?: number }} input
+ * @param {import('$lib/game/entities/character/factory.js').BaseCharacterInput & { classId?: string, level?: number }} input
  */
 export async function createCharacter(input) {
 	const classId = input.classId ?? 'peasant';

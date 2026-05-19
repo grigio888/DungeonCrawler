@@ -26,4 +26,4 @@ Before changing `src/lib/` or `tests/`, read [agents/README.md](../../agents/REA
 - Factories validate with `id in REGISTRY`, never `switch` + `Object.keys().includes()`.
 - Shared JSDoc types in domain `types.js`, derived from `index.js`.
 
-Reference: `src/lib/items/weapons/` and `tests/lib/items/weapons/`.
+Reference: `src/lib/content/items/weapons/` and `tests/lib/content/items/weapons/`.

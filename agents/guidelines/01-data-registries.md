@@ -3,7 +3,7 @@
 ## Folder layout
 
 ```
-src/lib/items/weapons/
+src/lib/content/items/weapons/
 ├── index.js              # registry (aggregate)
 ├── types.js              # WeaponId, WeaponDefinition
 ├── factory.js
@@ -19,7 +19,7 @@ Required fields:
 - `id`, `name`, `description` (non-empty strings)
 - `tier` (non-negative integer)
 - `category` — use domain enums (`ITEM_CATEGORIES.WEAPON`)
-- `rarity` — use `RARITY` from `$lib/enums`
+- `rarity` — use `RARITY` from `$lib/core/enum/items.js`
 - `scales` — every key in `SCALES`, values are numbers ≥ 0
 - `damage` — `{ min, max }`, both ≥ 0, `min <= max`
 

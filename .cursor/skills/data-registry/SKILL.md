@@ -23,9 +23,9 @@ Canonical guidelines: [agents/guidelines/01-data-registries.md](../../../agents/
 
 - [ ] Registry key === `definition.id`
 - [ ] `const` assertion on registry object
-- [ ] Enums from `$lib/enums` / domain `enums.js` (not ad-hoc strings)
+- [ ] Enums from `$lib/core/enum/` by domain (not ad-hoc strings)
 - [ ] No per-entity test files added
 
 ## Reference
 
-`src/lib/items/weapons/`
+`src/lib/content/items/weapons/`
