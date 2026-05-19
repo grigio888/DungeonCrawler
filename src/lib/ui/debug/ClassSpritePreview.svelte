@@ -88,10 +88,10 @@
 	{#if spriteOptions.animations.length > 0}
 		<div class="mb-4 space-y-3">
 			<label class="block text-sm">
-				<span class="mb-1.5 block text-xs tracking-wide text-zinc-500 uppercase">Animation</span>
+				<span class="mb-1.5 block text-xs tracking-wide text-text-subtle uppercase">Animation</span>
 				<select
 					bind:value={previewAnimation}
-					class="w-full rounded-lg border border-zinc-700 bg-white px-3 py-2 font-mono text-sm text-zinc-900 capitalize focus:border-emerald-500/50 focus:outline-none"
+					class="w-full rounded-lg border border-border-strong bg-white px-3 py-2 font-mono text-sm text-frame-dark capitalize focus:border-title-mid focus:outline-none"
 				>
 					{#each spriteOptions.animations as animation (animation)}
 						<option value={animation}>{animation}</option>
@@ -101,14 +101,13 @@
 
 			{#if previewFacings.length > 0}
 				<div>
-					<span class="mb-1.5 block text-xs tracking-wide text-zinc-500 uppercase">Facing</span>
+					<span class="mb-1.5 block text-xs tracking-wide text-text-subtle uppercase">Facing</span>
 					<div class="flex flex-wrap gap-1.5">
 						{#each previewFacings as facing (facing)}
 							<ButtonRetangular
 								label={facing}
-								class="font-mono uppercase {previewFacing === facing
-									? 'ring-1 ring-sky-600'
-									: ''}"
+								selected={previewFacing === facing}
+								class="font-mono uppercase"
 								onclick={() => {
 									previewFacing = facing;
 								}}
@@ -147,7 +146,7 @@
 	{/if}
 
 	<div
-		class="flex min-h-[18rem] w-full items-center justify-center rounded-xl border border-zinc-700 bg-zinc-950 p-4"
+		class="flex min-h-[18rem] w-full items-center justify-center rounded-xl border border-border-strong bg-surface-code p-4"
 	>
 		{#if previewSprite.url}
 			{#key previewSprite.key}
@@ -158,14 +157,14 @@
 				/>
 			{/key}
 		{:else}
-			<p class="px-2 text-center text-xs text-zinc-500">
+			<p class="px-2 text-center text-xs text-text-subtle">
 				No sprite at<br />
 				<code class="text-[10px]">{previewSprite.path}</code>
 			</p>
 		{/if}
 	</div>
 
-	<p class="mt-2 text-center font-mono text-[10px] text-zinc-600">{previewSprite.key}</p>
+	<p class="mt-2 text-center font-mono text-[10px] text-text-subtle">{previewSprite.key}</p>
 </div>
 
 <style>

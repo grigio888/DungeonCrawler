@@ -1,5 +1,4 @@
 <script>
-	import './window-theme.css';
 	import ButtonCircular from './ButtonCircular.svelte';
 
 	/**
@@ -27,32 +26,40 @@
 </script>
 
 <div
-	class="game-window relative flex min-w-0 flex-col overflow-hidden rounded-sm {className}"
+	class="relative flex h-fit min-w-0 flex-col overflow-hidden rounded-sm border border-window-border shadow-[0_4px_14px_rgba(12,30,46,0.12)] {className}"
 >
 	<header
-		class="game-window__header relative flex items-center gap-1.5 px-1.5 py-1"
+		class="relative flex items-center gap-1.5 border-b-2 border-gold bg-[linear-gradient(180deg,var(--color-title-top)_0%,var(--color-title-mid)_42%,var(--color-title-bottom)_100%)] px-1.5 py-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.55),inset_0_-1px_0_rgba(0,0,0,0.15)] after:pointer-events-none after:absolute after:right-0 after:-bottom-0.5 after:left-0 after:h-px after:bg-[linear-gradient(90deg,transparent,var(--color-gold-dim),transparent)] after:content-['']"
 	>
 		<ButtonCircular class="size-3.5" aria-label="Pin window" onclick={onTitleLeftClick} />
-		<h2 class="game-window__title min-w-0 flex-1 truncate text-center text-[11px] uppercase">
+		<h2
+			class="min-w-0 flex-1 truncate text-center text-[11px] font-semibold tracking-[0.04em] text-title-text uppercase [text-shadow:0_1px_0_rgba(255,255,255,0.65),0_-1px_0_rgba(0,0,0,0.12)]"
+		>
 			{title}
 		</h2>
 		<ButtonCircular class="size-3.5" aria-label="Close window" onclick={onTitleRightClick} />
 	</header>
 
-	<main class="flex min-h-0 flex-1">
-		<section class="game-window__body flex min-w-0 flex-1 flex-col gap-1 p-4 text-stone-900">
+	<main class="flex min-w-0">
+		<section
+			class="flex min-w-0 flex-1 flex-col gap-1 bg-[linear-gradient(180deg,var(--color-white)_0%,var(--color-parchment)_50%,var(--color-parchment-deep)_100%)] p-4 text-stone-900 shadow-[inset_0_1px_0_rgba(255,255,255,1)]"
+		>
 			{@render children()}
 		</section>
 
 		{#if aside}
-			<aside class="game-window__aside flex w-[5.75rem] shrink-0 flex-col p-1.5">
+			<aside
+				class="flex w-[5.75rem] shrink-0 flex-col border-l-2 border-[color-mix(in_srgb,var(--color-frame-light)_35%,transparent)] bg-[linear-gradient(180deg,var(--color-white)_0%,var(--color-parchment-aside)_100%)] p-1.5 shadow-[inset_4px_0_14px_rgba(255,255,255,0.9)]"
+			>
 				{@render aside()}
 			</aside>
 		{/if}
 	</main>
 
 	{#if footer}
-		<footer class="game-window__footer flex w-full flex-col gap-1 px-4 py-3 text-xs text-stone-800">
+		<footer
+			class="flex w-full flex-col gap-1 border-t-2 border-[color-mix(in_srgb,var(--color-frame-light)_35%,transparent)] bg-[linear-gradient(180deg,var(--color-parchment-deep)_0%,var(--color-parchment-footer)_100%)] px-4 py-3 text-xs text-stone-800 shadow-[inset_0_1px_0_rgba(255,255,255,0.85)]"
+		>
 			{@render footer()}
 		</footer>
 	{/if}

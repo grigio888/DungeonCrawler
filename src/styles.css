@@ -1,0 +1,106 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+:root {
+	/* Wood frame */
+	--color-frame-dark: #1f1610;
+	--color-frame: #4a3b2a;
+	--color-frame-light: #9a7b4f;
+
+	/* Accent */
+	--color-gold: #d4af37;
+	--color-gold-dim: #a8843a;
+
+	/* Parchment surfaces */
+	--color-white: #ffffff;
+	--color-parchment: #fffdf9;
+	--color-parchment-deep: #faf6f0;
+	--color-parchment-aside: #f6f2eb;
+	--color-parchment-footer: #f3eee6;
+
+	/* Header / title blues */
+	--color-title-top: #b8ecff;
+	--color-title-mid: #5eb8f0;
+	--color-title-bottom: #2a6dad;
+	--color-title-text: #0c1e2e;
+
+	/* Progress bar */
+	--color-bar-track: #2a2218;
+	--color-bar-fill-top: #7ec8ff;
+	--color-bar-fill-bottom: #2a6dad;
+
+	/* Page & text */
+	--color-page-bg: #fffffe;
+	--color-text: #2c2018;
+	--color-text-muted: #5c4a36;
+	--color-text-subtle: #8a7355;
+
+	/* Borders & surfaces */
+	--color-border: #e8dcc8;
+	--color-border-strong: #c9b896;
+	--color-surface-inset: #f6f2eb;
+	--color-surface-code: #faf6f0;
+
+	/* Interactive */
+	--color-selected-bg: #e3f3fc;
+	--color-selected-text: #1a4468;
+
+	/* Window chrome */
+	--color-window-border: #0c1e2e;
+
+	/* Buttons */
+	--color-btn-top: #d9effc;
+	--color-btn-mid: #a8d8f4;
+	--color-btn-bottom: #7ec0ea;
+	--color-btn-hover-top: #ebf6ff;
+	--color-btn-hover-mid: #bde4f8;
+	--color-btn-hover-bottom: #8ecff0;
+	--color-btn-selected-top: #c2e8ff;
+	--color-btn-selected-mid: #8ed0f5;
+	--color-btn-selected-bottom: #5eb8f0;
+	--color-btn-text: #0c1e2e;
+	--color-btn-border: #5a9cc8;
+}
+
+@theme inline {
+	--color-frame-dark: var(--color-frame-dark);
+	--color-frame: var(--color-frame);
+	--color-frame-light: var(--color-frame-light);
+	--color-gold: var(--color-gold);
+	--color-gold-dim: var(--color-gold-dim);
+	--color-white: var(--color-white);
+	--color-parchment: var(--color-parchment);
+	--color-parchment-deep: var(--color-parchment-deep);
+	--color-parchment-aside: var(--color-parchment-aside);
+	--color-parchment-footer: var(--color-parchment-footer);
+	--color-title-top: var(--color-title-top);
+	--color-title-mid: var(--color-title-mid);
+	--color-title-bottom: var(--color-title-bottom);
+	--color-title-text: var(--color-title-text);
+	--color-bar-track: var(--color-bar-track);
+	--color-bar-fill-top: var(--color-bar-fill-top);
+	--color-bar-fill-bottom: var(--color-bar-fill-bottom);
+	--color-page-bg: var(--color-page-bg);
+	--color-text: var(--color-text);
+	--color-text-muted: var(--color-text-muted);
+	--color-text-subtle: var(--color-text-subtle);
+	--color-border: var(--color-border);
+	--color-border-strong: var(--color-border-strong);
+	--color-surface-inset: var(--color-surface-inset);
+	--color-surface-code: var(--color-surface-code);
+	--color-selected-bg: var(--color-selected-bg);
+	--color-selected-text: var(--color-selected-text);
+	--color-window-border: var(--color-window-border);
+	--color-btn-top: var(--color-btn-top);
+	--color-btn-mid: var(--color-btn-mid);
+	--color-btn-bottom: var(--color-btn-bottom);
+	--color-btn-hover-top: var(--color-btn-hover-top);
+	--color-btn-hover-mid: var(--color-btn-hover-mid);
+	--color-btn-hover-bottom: var(--color-btn-hover-bottom);
+	--color-btn-selected-top: var(--color-btn-selected-top);
+	--color-btn-selected-mid: var(--color-btn-selected-mid);
+	--color-btn-selected-bottom: var(--color-btn-selected-bottom);
+	--color-btn-text: var(--color-btn-text);
+	--color-btn-border: var(--color-btn-border);
+}
