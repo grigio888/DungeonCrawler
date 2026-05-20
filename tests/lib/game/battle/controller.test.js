@@ -58,7 +58,7 @@ describe('battle/controller', () => {
 		const snapshot = battle.getSnapshot('player');
 
 		expect(snapshot.kind).toBe('character');
-		expect(snapshot.spriteKey).toBe(`female_idle_${FACING.SW}`);
+		expect(snapshot.spriteKey).toBe(`female_idle_${FACING.NE}`);
 	});
 
 	it('snapshots use dead sprite key when character hp is 0', () => {
@@ -69,7 +69,7 @@ describe('battle/controller', () => {
 
 		expect(snapshot.isAlive).toBe(false);
 		expect(snapshot.hp).toBe(0);
-		expect(snapshot.spriteKey).toBe(`female_dead_${FACING.SW}`);
+		expect(snapshot.spriteKey).toBe(`female_dead_${FACING.NE}`);
 	});
 
 	it('records critical hits on battle actions', () => {

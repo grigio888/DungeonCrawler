@@ -1,3 +1,4 @@
+import { FACING } from '$lib/core/enum/sprites.js';
 import { buildCharacterSpriteKey as buildSpriteKey } from '$lib/game/presentation/sprites/characterSprite.js';
 
 /** @typedef {import('./types.js').BattleCombatant} BattleCombatant */
@@ -39,17 +40,22 @@ export function snapshotCombatant(entity, side) {
 		maxSp: entity.maxSp,
 		skills: [...entity.skills],
 		isAlive: entity.isAlive,
-		spriteKey: isCharacter(entity) ? buildCharacterSpriteKey(entity) : null,
+		spriteKey: isCharacter(entity) ? buildCharacterSpriteKey(entity, side) : null,
 		promptPath: entity.promptPath
 	};
 }
 
 /**
  * @param {import('$lib/game/entities/character/controller.js').default} character
+ * @param {BattleSide} [side]
  */
-export function buildCharacterSpriteKey(character) {
+export function buildCharacterSpriteKey(character, side) {
 	const animation = character.isAlive ? 'idle' : 'dead';
-	return buildSpriteKey(character.gender, character.spec.position?.facing, animation);
+	let facing = character.spec.position?.facing;
+	if (side === 'player') {
+		facing = FACING.NE;
+	}
+	return buildSpriteKey(character.gender, facing, animation);
 }
 
 /**

@@ -15,6 +15,10 @@
 		getBattleCombatantCoords,
 		getIsoTileDisplayCenter
 	} from '$lib/game/map';
+	import {
+		getCombatantSpriteAnchor,
+		parseAnimationFromCharacterSpriteKey
+	} from '$lib/game/presentation/sprites';
 	import SkillFactory from '$lib/content/skills/factory';
 	import BattleDamagePopup from '$lib/ui/battle/BattleDamagePopup.svelte';
 	import BattleSkillBar from '$lib/ui/battle/BattleSkillBar.svelte';
@@ -24,6 +28,10 @@
 
 	/** Fixed seed so the battle arena layout is stable between visits. */
 	const BATTLE_MAP_SEED = 42;
+
+	/** Player sprite is drawn larger than opponents on the battle map. */
+	const BATTLE_PLAYER_ALIVE_SPRITE_SCALE = 1.75;
+	const BATTLE_PLAYER_DEAD_SPRITE_SCALE = 1.35;
 
 	/**
 	 * @type {{
@@ -71,6 +79,21 @@
 		battle?.opponentSnapshot ?? snapshotCombatant(opponent, 'opponent')
 	);
 
+	/**
+	 * @param {import('$lib/game/battle/types.js').CombatantSnapshot} view
+	 */
+	function mapCombatantSpriteAnchor(view) {
+		if (view.spriteKey) {
+			return getCombatantSpriteAnchor(parseAnimationFromCharacterSpriteKey(view.spriteKey));
+		}
+
+		let animation = 'idle';
+		if (!view.isAlive) {
+			animation = 'dead';
+		}
+		return getCombatantSpriteAnchor(animation);
+	}
+
 	const playerSpriteUrl = $derived.by(() => {
 		if (!playerView?.spriteKey) return null;
 		return resolveClassSpriteUrl(
@@ -84,7 +107,12 @@
 	const opponentSpriteUrl = $derived.by(() => {
 		if (!opponentView) return null;
 		if (opponentView.kind === 'monster') {
-			return resolveMonsterSpriteUrl(monsterSprites, opponentView.promptPath ?? '', 'idle');
+			const monsterSprite = opponentView.isAlive ? 'idle' : 'dead';
+			return resolveMonsterSpriteUrl(
+				monsterSprites,
+				opponentView.promptPath ?? '',
+				monsterSprite
+			);
 		}
 		if (!opponentView.spriteKey) return null;
 		return resolveClassSpriteUrl(
@@ -95,22 +123,25 @@
 	});
 
 	const mapCombatants = $derived.by(() => {
-		/** @type {{ coord: import('$lib/game/map/types.js').MapCoord, spriteUrl: string | null, side: 'player' | 'opponent' }[]} */
+		/** @type {{ coord: import('$lib/game/map/types.js').MapCoord, spriteUrl: string, side: 'player' | 'opponent', spriteAnchor: import('$lib/game/presentation/sprites/characterSprite.js').CombatantSpriteAnchor, spriteScale?: number }[]} */
 		const markers = [];
 
-		if (playerSpriteUrl) {
+		if (playerSpriteUrl && playerView) {
 			markers.push({
 				coord: combatantCoords.player,
 				spriteUrl: playerSpriteUrl,
-				side: 'player'
+				side: 'player',
+				spriteAnchor: mapCombatantSpriteAnchor(playerView),
+				spriteScale: playerView.isAlive ? BATTLE_PLAYER_ALIVE_SPRITE_SCALE : BATTLE_PLAYER_DEAD_SPRITE_SCALE
 			});
 		}
 
-		if (opponentSpriteUrl) {
+		if (opponentSpriteUrl && opponentView) {
 			markers.push({
 				coord: combatantCoords.opponent,
 				spriteUrl: opponentSpriteUrl,
-				side: 'opponent'
+				side: 'opponent',
+				spriteAnchor: mapCombatantSpriteAnchor(opponentView)
 			});
 		}
 

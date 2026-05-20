@@ -9,10 +9,16 @@
 	} from '$lib/game/map/isoTileGeometry.js';
 
 	/**
+	 * @typedef {import('$lib/game/presentation/sprites/characterSprite.js').CombatantSpriteAnchor} CombatantSpriteAnchor
+	 */
+
+	/**
 	 * @typedef {{
 	 *   coord: import('$lib/game/map/types.js').MapCoord,
 	 *   spriteUrl: string | null,
-	 *   side: 'player' | 'opponent'
+	 *   side: 'player' | 'opponent',
+	 *   spriteAnchor?: CombatantSpriteAnchor,
+	 *   spriteScale?: number
 	 * }} MapCombatantMarker
 	 */
 
@@ -126,6 +132,30 @@
 	}
 
 	/**
+	 * @param {MapCombatantMarker} marker
+	 */
+	function combatantSpriteSize(marker) {
+		const scale = marker.spriteScale ?? 1;
+		return {
+			width: COMBATANT_SPRITE_WIDTH * scale,
+			height: COMBATANT_SPRITE_HEIGHT * scale
+		};
+	}
+
+	/**
+	 * @param {CombatantSpriteAnchor} spriteAnchor
+	 * @param {number} width
+	 * @param {number} height
+	 */
+	function combatantSpriteRect(spriteAnchor, width, height) {
+		const x = -width / 2;
+		if (spriteAnchor === 'feet') {
+			return { x, y: -height };
+		}
+		return { x, y: -height / 2 };
+	}
+
+	/**
 	 * @param {import('$lib/game/map/types.js').MapTile} tile
 	 */
 	function tileTitle(tile) {
@@ -207,6 +237,12 @@
 
 		{#each combatantEntries as { marker, entry } (`${marker.side}-${entry.tile.x}-${entry.tile.y}`)}
 			{#if marker.spriteUrl}
+				{@const spriteSize = combatantSpriteSize(marker)}
+				{@const spriteRect = combatantSpriteRect(
+					marker.spriteAnchor ?? 'center',
+					spriteSize.width,
+					spriteSize.height
+				)}
 				<g
 					class="iso-combatant"
 					class:iso-combatant--player={marker.side === 'player'}
@@ -215,10 +251,10 @@
 				>
 					<image
 						href={marker.spriteUrl}
-						x={-COMBATANT_SPRITE_WIDTH / 2}
-						y={-COMBATANT_SPRITE_HEIGHT / 2}
-						width={COMBATANT_SPRITE_WIDTH}
-						height={COMBATANT_SPRITE_HEIGHT}
+						x={spriteRect.x}
+						y={spriteRect.y}
+						width={spriteSize.width}
+						height={spriteSize.height}
 						class="iso-combatant__sprite"
 					/>
 				</g>

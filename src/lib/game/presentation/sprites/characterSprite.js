@@ -15,6 +15,34 @@ export function buildCharacterSpriteKey(gender, facing, animation = 'idle') {
 	return `${gender}_${animation}_${resolveFacing(facing)}`;
 }
 
+const SPRITE_KEY_PATTERN = /^[a-z]+_([a-z0-9]+)_[a-z]{2}$/i;
+
+/**
+ * @param {string} spriteKey e.g. `female_idle_sw`
+ * @returns {string}
+ */
+export function parseAnimationFromCharacterSpriteKey(spriteKey) {
+	const match = spriteKey.match(SPRITE_KEY_PATTERN);
+	if (!match) {
+		return 'idle';
+	}
+	return match[1];
+}
+
+/** @typedef {'center' | 'feet'} CombatantSpriteAnchor */
+
+/**
+ * Standing sprites align feet to the tile center; dead sprites stay centered on the tile.
+ * @param {string} animation
+ * @returns {CombatantSpriteAnchor}
+ */
+export function getCombatantSpriteAnchor(animation) {
+	if (animation === 'dead') {
+		return 'center';
+	}
+	return 'feet';
+}
+
 const SPRITE_FILE_PATTERN = /^[a-z]+_([a-z0-9]+)_([a-z]{2})\.(png|webp|gif)$/i;
 
 /**
